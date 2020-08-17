@@ -72,25 +72,25 @@ export class AssetInventoryComponent implements OnInit, OnDestroy {
   SelectionType = SelectionType;
   listRoles: any = [
     {
-      name: "Bore Pile",
-      owner: "Afizi",
-      health: "AC",
+      name: "Track 1",
+      owner: "3.109149,101.643811",
+      health: "Track is clean and clear",
       budget: "RM 301,900.00",
       expenses: "RM 150,000.00",
       created_at: "2019-07-27T01:07:14Z",
     },
     {
-      name: "Micro Pile",
-      owner: "Amin",
-      health: "PE",
+      name: "Track 2",
+      owner: "3.037840,101.748251",
+      health: "The covered with mud",
       budget: "RM 165,800.00",
       expenses: "70,000.00",
       created_at: "2019-07-27T01:07:14Z",
     },
     {
-      name: "Crosshead",
-      owner: "Husaini",
-      health: "CA",
+      name: "Track 3",
+      owner: "2.922640,101.654805",
+      health: "The covered with the bamboo tree",
       budget: "RM 139,900.00",
       expenses: "RM 65,000.00",
       created_at: "2019-07-27T01:07:14Z",
@@ -115,7 +115,7 @@ export class AssetInventoryComponent implements OnInit, OnDestroy {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/pin.png",
+        iconUrl: "../assets/img/google/cctv-b.png",
       }),
     }),
     // circle([ 46.95, -122 ], { radius: 5000 }),
@@ -124,49 +124,49 @@ export class AssetInventoryComponent implements OnInit, OnDestroy {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/pin2.png",
+        iconUrl: "../assets/img/google/cctv-b.png",
       }),
     }),
     marker([3.038944, 101.523971], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/pin2.png",
+        iconUrl: "../assets/img/google/cctv-b.png",
       }),
     }),
     marker([3.028412, 101.611981], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/pin2.png",
+        iconUrl: "../assets/img/google/cctv-b.png",
       }),
     }),
     marker([3.077438, 101.640332], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/pin2.png",
+        iconUrl: "../assets/img/google/cctv-b.png",
       }),
     }),
     marker([2.998242, 101.535026], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/pin3.png",
+        iconUrl: "../assets/img/google/cctv-b.png",
       }),
     }),
     marker([3.032526, 101.643587], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/pin3.png",
+        iconUrl: "../assets/img/google/cctv-b.png",
       }),
     }),
     marker([3.04624, 101.750774], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/pin3.png",
+        iconUrl: "../assets/img/google/cctv-b.png",
       }),
     }),
   ];
@@ -186,7 +186,7 @@ export class AssetInventoryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.getCharts();
+    // this.getCharts();
   }
 
   ngOnDestroy() {
@@ -243,8 +243,8 @@ export class AssetInventoryComponent implements OnInit, OnDestroy {
     console.log(path + "/" + id);
     if (path == "/admin//utility/Actions") {
       return this.router.navigate([path]);
-    } else if (path == "/admin//utility/Action-detail") {
-      return this.router.navigate([path, id]);
+    } else if (path == "/admin/asset-warranty") {
+      return this.router.navigate([path]);
     }
   }
 

@@ -1,62 +1,45 @@
 import {
   Component,
   OnInit,
-  TemplateRef,
-  ElementRef,
-  ViewChild,
   OnDestroy,
   NgZone,
+  TemplateRef,
 } from "@angular/core";
+import { Audit } from "src/assets/mock/admin-audit/audit.model";
+import { MocksService } from "src/app/shared/services/mocks/mocks.service";
+// import { AuditData } from 'src/assets/mock/admin-audit/audit.data.json'
+import * as moment from "moment";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-import * as am4plugins_timeline from "@amcharts/amcharts4/plugins/timeline";
 am4core.useTheme(am4themes_animated);
 
-import { Router } from "@angular/router";
-import noUiSlider from "nouislider";
-import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
+//
+import { HttpClient } from "@angular/common/http";
+import { environment } from "src/environments/environment";
+import { BsModalRef, BsModalService } from "ngx-bootstrap";
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl,
+} from "@angular/forms";
 import swal from "sweetalert2";
+import { LoadingBarService } from "@ngx-loading-bar/core";
+import { AuthService } from "src/app/shared/services/auth/auth.service";
+import { NotifyService } from "src/app/shared/handler/notify/notify.service";
+import { Router, ActivatedRoute } from "@angular/router";
+import { tileLayer, latLng, marker, icon } from "leaflet";
+import { BsDropdownConfig } from "ngx-bootstrap/dropdown";
+import "leaflet/dist/images/marker-shadow.png";
 
-import { Calendar } from "@fullcalendar/core";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interaction from "@fullcalendar/interaction";
-
-const mock = [
-  {
-    income_dis: "RM 5500.00",
-    price_return: "RM 2000.00",
-    income_return: "RM 1500.00",
-    total_return: "RM 6000.00",
-    fund_vol: "RM 5500.00",
-    std_dev: "RM 2000.00",
-    info_ratio: "RM 1500.00",
-    sharp_ratio: "6000.00",
-    created_at: "27-07-2019",
-  },
-  {
-    income_dis: "RM 3500.00",
-    price_return: "RM 1000.00",
-    income_return: "RM 500.00",
-    total_return: "RM 4000.00",
-    fund_vol: "RM 3500.00",
-    std_dev: "RM 1000.00",
-    info_ratio: "RM 500.00",
-    sharp_ratio: "4000.00",
-    created_at: "27-07-2019",
-  },
-  {
-    income_dis: "RM 7500.00",
-    price_return: "RM 5000.00",
-    income_return: "RM 2500.00",
-    total_return: "RM 9000.00",
-    fund_vol: "RM 7500.00",
-    std_dev: "RM 5000.00",
-    info_ratio: "RM 2500.00",
-    sharp_ratio: "4000.00",
-    created_at: "27-07-2019",
-  },
-];
+export enum SelectionType {
+  single = "single",
+  multi = "multi",
+  multiClick = "multiClick",
+  cell = "cell",
+  checkbox = "checkbox",
+}
 
 @Component({
   selector: "app-routine-maintenance",
@@ -64,742 +47,334 @@ const mock = [
   styleUrls: ["./routine-maintenance.component.scss"],
 })
 export class RoutineMaintenanceComponent implements OnInit, OnDestroy {
-  chart;
+  // Chart
+  chart: any;
 
-  // data
-  // datas = mock;
-  datas = [
-    {
-      name: "Routine 1",
-      desc: "Routine Description 1",
-      amount: "RM 300000",
-      status: "Reviewed",
-      created_at: "2019-07-27T01:07:14Z",
-    },
-    {
-      name: "Routine 2",
-      desc: "Routine Description 2",
-      amount: "RM 20000",
-      status: "Approved",
-      created_at: "2019-07-27T01:07:14Z",
-    },
-    {
-      name: "Routine 3",
-      desc: "Routine Description 3",
-      amount: "RM 780000",
-      status: "Cancelled",
-      created_at: "2019-07-27T01:07:14Z",
-    },
-  ];
-
-  bsValue = new Date();
-  bsRangeValue: Date[];
-  maxDate = new Date();
-
-  addModal: BsModalRef;
-  editModal: BsModalRef;
-  @ViewChild("modalAdd") modalAdd: ElementRef;
-  @ViewChild("modalEdit") modalEdit: ElementRef;
-  default = {
-    keyboard: true,
-    class: "modal-dialog-centered modal-secondary",
+  // Datepicker
+  bsDPConfig = {
+    isAnimated: true,
+    containerClass: "theme-default",
   };
-  radios = "bg-danger";
-  eventTitle = undefined;
-  eventDescription;
-  eventId;
-  event;
-  startDate;
-  endDate;
-  calendar;
-  today = new Date();
-  y = this.today.getFullYear();
-  m = this.today.getMonth();
-  d = this.today.getDate();
-  events = [
-    {
-      id: 0,
-      title: "Lunch meeting",
-      start: "2018-11-21",
-      end: "2018-11-22",
-      className: "bg-orange",
-    },
-    {
-      id: 1,
-      title: "Call with Dave",
-      start: new Date(this.y, this.m, 1),
-      allDay: true,
-      className: "bg-red",
-      description:
-        "Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
-    },
 
-    {
-      id: 2,
-      title: "Lunch meeting",
-      start: new Date(this.y, this.m, this.d - 1, 10, 30),
-      allDay: true,
-      className: "bg-orange",
-      description:
-        "Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
-    },
+  // Modal
+  modal: BsModalRef;
+  modalConfig = {
+    keyboard: true,
+    class: "modal-dialog-centered",
+  };
 
+  // Table
+  tableEntries: number = 5;
+  tableSelected: any[] = [];
+  tableTemp = [];
+  tableActiveRow: any;
+  tableRows: Audit[] = [];
+  SelectionType = SelectionType;
+  listRoles: any = [
     {
-      id: 3,
-      title: "All day conference",
-      start: new Date(this.y, this.m, this.d + 7, 12, 0),
-      allDay: true,
-      className: "bg-green",
-      description:
-        "Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+      name: "Track 1",
+      owner: "3.109149,101.643811",
+      health: "Track is clean and clear",
+      budget: "RM 301,900.00",
+      expenses: "RM 150,000.00",
+      created_at: "2019-07-27T01:07:14Z",
     },
-
     {
-      id: 4,
-      title: "Meeting with Mary",
-      start: new Date(this.y, this.m, this.d - 2),
-      allDay: true,
-      className: "bg-blue",
-      description:
-        "Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+      name: "Track 2",
+      owner: "3.037840,101.748251",
+      health: "The covered with mud",
+      budget: "RM 165,800.00",
+      expenses: "70,000.00",
+      created_at: "2019-07-27T01:07:14Z",
     },
-
     {
-      id: 5,
-      title: "Winter Hackaton",
-      start: new Date(this.y, this.m, this.d + 1, 19, 0),
-      allDay: true,
-      className: "bg-red",
-      description:
-        "Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
-    },
-
-    {
-      id: 6,
-      title: "Digital event",
-      start: new Date(this.y, this.m, 21),
-      allDay: true,
-      className: "bg-warning",
-      description:
-        "Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
-    },
-
-    {
-      id: 7,
-      title: "Marketing event",
-      start: new Date(this.y, this.m, 21),
-      allDay: true,
-      className: "bg-purple",
-      description:
-        "Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
-    },
-
-    {
-      id: 8,
-      title: "Dinner with Family",
-      start: new Date(this.y, this.m, 19),
-      allDay: true,
-      className: "bg-red",
-      description:
-        "Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
-    },
-
-    {
-      id: 9,
-      title: "Black Friday",
-      start: new Date(this.y, this.m, 23),
-      allDay: true,
-      className: "bg-blue",
-      description:
-        "Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
-    },
-
-    {
-      id: 10,
-      title: "Cyber Week",
-      start: new Date(this.y, this.m, 2),
-      allDay: true,
-      className: "bg-yellow",
-      description:
-        "Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+      name: "Track 3",
+      owner: "2.922640,101.654805",
+      health: "The covered with the bamboo tree",
+      budget: "RM 139,900.00",
+      expenses: "RM 65,000.00",
+      created_at: "2019-07-27T01:07:14Z",
     },
   ];
 
-  constructor(private zone: NgZone, private modalService: BsModalService) {}
-
-  ngOnInit() {
-    this.initCalendar();
-
-    // this.initChart();
-    this.initChart2();
-    // this.initChart3();
-    var c: any = document.getElementById("input-slider"),
-      d = document.getElementById("input-slider-value");
-
-    noUiSlider.create(c, {
-      start: 100,
-      connect: [true, false],
-      //step: 1000,
-      range: {
-        min: 100,
-        max: 500,
-      },
+  // map code
+  options = {
+    layers: [
+      tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 18,
+        attribution: "...",
+      }),
+    ],
+    zoom: 12,
+    center: latLng(3.065524, 101.645919),
+  };
+  layers = [
+    // circle([ 46.95, -122 ], { radius: 5000 }),
+    // polygon([[ 46.8, -121.85 ], [ 46.92, -121.92 ], [ 46.87, -121.8 ]]),
+    marker([3.038012, 101.737032], {
+      icon: icon({
+        iconSize: [40, 40],
+        iconAnchor: [13, 41],
+        iconUrl: "../assets/img/google/cctv-g.png",
+      }),
     }),
-      c.noUiSlider.on("update", function (a, b) {
-        d.textContent = a[b];
-      });
-
-    var c1: any = document.getElementById("input-slider-range"),
-      d1 = document.getElementById("input-slider-range-value-low"),
-      e = document.getElementById("input-slider-range-value-high"),
-      f = [d1, e];
-
-    noUiSlider.create(c1, {
-      start: [
-        parseInt(d1.getAttribute("data-range-value-low")),
-        parseInt(e.getAttribute("data-range-value-high")),
-      ],
-      connect: !0,
-      range: {
-        min: parseInt(c1.getAttribute("data-range-value-min")),
-        max: parseInt(c1.getAttribute("data-range-value-max")),
-      },
+    // circle([ 46.95, -122 ], { radius: 5000 }),
+    // polygon([[ 46.8, -121.85 ], [ 46.92, -121.92 ], [ 46.87, -121.8 ]]),
+    marker([3.000545, 101.583062], {
+      icon: icon({
+        iconSize: [40, 40],
+        iconAnchor: [13, 41],
+        iconUrl: "../assets/img/google/cctv-g.png",
+      }),
     }),
-      c1.noUiSlider.on("update", function (a, b) {
-        f[b].textContent = a[b];
-      });
+    marker([3.038944, 101.523971], {
+      icon: icon({
+        iconSize: [40, 40],
+        iconAnchor: [13, 41],
+        iconUrl: "../assets/img/google/cctv-g.png",
+      }),
+    }),
+    marker([3.028412, 101.611981], {
+      icon: icon({
+        iconSize: [40, 40],
+        iconAnchor: [13, 41],
+        iconUrl: "../assets/img/google/cctv-g.png",
+      }),
+    }),
+    marker([3.077438, 101.640332], {
+      icon: icon({
+        iconSize: [40, 40],
+        iconAnchor: [13, 41],
+        iconUrl: "../assets/img/google/cctv-g.png",
+      }),
+    }),
+    marker([2.998242, 101.535026], {
+      icon: icon({
+        iconSize: [40, 40],
+        iconAnchor: [13, 41],
+        iconUrl: "../assets/img/google/cctv-g.png",
+      }),
+    }),
+    marker([3.032526, 101.643587], {
+      icon: icon({
+        iconSize: [40, 40],
+        iconAnchor: [13, 41],
+        iconUrl: "../assets/img/google/cctv-g.png",
+      }),
+    }),
+    marker([3.04624, 101.750774], {
+      icon: icon({
+        iconSize: [40, 40],
+        iconAnchor: [13, 41],
+        iconUrl: "../assets/img/google/cctv-g.png",
+      }),
+    }),
+  ];
+
+  constructor(
+    private mockService: MocksService,
+    private notifyService: NotifyService,
+    private zone: NgZone,
+    private modalService: BsModalService,
+    private formBuilder: FormBuilder,
+    private http: HttpClient,
+    private loadingBar: LoadingBarService,
+    private router: Router,
+    private _route: ActivatedRoute
+  ) {
+    this.getData();
   }
 
-  changeView(newView) {
-    this.calendar.changeView(newView);
-
-    currentDate: this.calendar.view.title;
+  ngOnInit() {
+    // this.getCharts();
   }
 
   ngOnDestroy() {
     this.zone.runOutsideAngular(() => {
       if (this.chart) {
-        console.log("Chart disposed");
         this.chart.dispose();
       }
     });
   }
-  initCalendar() {
-    this.calendar = new Calendar(document.getElementById("calendar"), {
-      plugins: [interaction, dayGridPlugin],
-      defaultView: "dayGridMonth",
-      selectable: true,
-      editable: true,
-      events: this.events,
-      views: {
-        month: {
-          titleFormat: { month: "long", year: "numeric" },
-        },
-        agendaWeek: {
-          titleFormat: { month: "long", year: "numeric", day: "numeric" },
-        },
-        agendaDay: {
-          titleFormat: { month: "short", year: "numeric", day: "numeric" },
-        },
-      },
-      // Add new event
-      select: (info) => {
-        this.addModal = this.modalService.show(this.modalAdd, this.default);
-        this.startDate = info.startStr;
-        this.endDate = info.endStr;
-      },
-      // Edit calendar event action
-      eventClick: ({ event }) => {
-        this.eventId = event.id;
-        this.eventTitle = event.title;
-        this.eventDescription = event.extendedProps.description;
-        this.radios = "bg-danger";
-        this.event = event;
-        this.editModal = this.modalService.show(this.modalEdit, this.default);
-      },
-    });
-    this.calendar.render();
-  }
-  getNewEventTitle(e) {
-    this.eventTitle = e.target.value;
+
+  getData() {
+    // this.mockService.getAll(this.listFee).subscribe(
+    //   (res) => {
+    //     // Success
+    //     this.tableRows = [...res];
+    //     this.tableTemp = this.tableRows.map((prop, key) => {
+    //       return {
+    //         ...prop,
+    //         id: key,
+    //       };
+    //     });
+    //     console.log("Svc: ", this.tableTemp);
+    //   },
+    //   () => {
+    //     // Unsuccess
+    //   },
+    //   () => {
+    //     // After
+    //     this.getChart();
+    //   }
+    // );
   }
 
-  getNewEventDescription(e) {
-    this.eventDescription = e.target.value;
+  openModal(modalRef: TemplateRef<any>, row) {
+    // if (row) {
+    //   console.log(row);
+    //   this.editActionForm.patchValue(row);
+    // }
+    // this.modal = this.modalService.show(
+    //   modalRef,
+    //   Object.assign({}, { class: "gray modal-xl" })
+    // );
+    this.modal = this.modalService.show(modalRef, this.modalConfig);
   }
 
-  addNewEvent() {
-    this.events.push({
-      title: this.eventTitle,
-      start: this.startDate,
-      end: this.endDate,
-      className: this.radios,
-      id: this.events.length,
-    });
-    this.calendar.addEvent({
-      title: this.eventTitle,
-      start: this.startDate,
-      end: this.endDate,
-      className: this.radios,
-      id: this.events.length,
-    });
-    this.addModal.hide();
-    this.radios = "bg-danger";
-    (this.eventTitle = undefined),
-      (this.eventDescription = undefined),
-      (this.eventId = undefined),
-      (this.event = undefined);
+  closeModal() {
+    this.modal.hide();
+    // this.editActionForm.reset();
   }
 
-  deleteEventSweetAlert() {
-    this.editModal.hide();
-    swal
-      .fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonClass: "btn btn-danger",
-        cancelButtonClass: "btn btn-secondary",
-        confirmButtonText: "Yes, delete it!",
-        buttonsStyling: false,
-      })
-      .then((result) => {
-        if (result.value) {
-          this.events = this.events.filter(
-            (prop) => prop.id + "" !== this.eventId
-          );
-          this.initCalendar();
-          swal.fire({
-            title: "Deleted!",
-            text: "Your file has been deleted.",
-            type: "success",
-            confirmButtonClass: "btn btn-primary",
-            buttonsStyling: false,
-          });
+  navigatePage(path: String, id) {
+    // let qq = "db17a36a-1da6-4919-9746-dfed8802ec9d";
+    console.log(id);
+    console.log(path + "/" + id);
+    if (path == "/admin//utility/Actions") {
+      return this.router.navigate([path]);
+    } else if (path == "/admin/asset-warranty") {
+      return this.router.navigate([path]);
+    }
+  }
+
+  successMessage() {
+    let title = "Success";
+    let message = "Create New Action";
+    this.notifyService.openToastr(title, message);
+  }
+
+  successEditMessage() {
+    let title = "Success";
+    let message = "Edit Action";
+    this.notifyService.openToastr(title, message);
+  }
+
+  errorAlert(task) {
+    swal.fire({
+      title: "Error",
+      text: "Cannot " + task + " Action, Please Try Again!",
+      type: "error",
+      buttonsStyling: false,
+      confirmButtonClass: "btn btn-danger",
+      confirmButtonText: "Close",
+    });
+  }
+
+  successAlert(task) {
+    swal.fire({
+      title: "Success",
+      text: "Successfully " + task,
+      type: "success",
+      buttonsStyling: false,
+      confirmButtonClass: "btn btn-success",
+      confirmButtonText: "Close",
+    });
+  }
+
+  entriesChange($event) {
+    this.tableEntries = $event.target.value;
+  }
+
+  filterTable($event) {
+    let val = $event.target.value;
+    this.tableTemp = this.tableRows.filter(function (d) {
+      for (var key in d) {
+        if (d[key].toLowerCase().indexOf(val) !== -1) {
+          return true;
         }
-      });
-    this.radios = "bg-danger";
-    (this.eventTitle = undefined),
-      (this.eventDescription = undefined),
-      (this.eventId = undefined),
-      (this.event = undefined);
-  }
-
-  updateEvent() {
-    this.events = this.events.map((prop, key) => {
-      if (prop.id + "" === this.eventId + "") {
-        return {
-          ...prop,
-          title: this.eventTitle,
-          className: this.radios,
-          description: this.eventDescription,
-        };
-      } else {
-        return prop;
       }
+      return false;
     });
-    this.radios = "bg-danger";
-    (this.eventTitle = undefined),
-      (this.eventDescription = undefined),
-      (this.eventId = undefined),
-      (this.event = undefined);
-    this.initCalendar();
-    this.editModal.hide();
   }
 
+  onSelect({ selected }) {
+    this.tableSelected.splice(0, this.tableSelected.length);
+    this.tableSelected.push(...selected);
+  }
+
+  onActivate(event) {
+    this.tableActiveRow = event.row;
+  }
+
+  getCharts() {
+    this.zone.runOutsideAngular(() => {
+      this.initChart();
+    });
+  }
   initChart() {
-    let chart = am4core.create(
-      "chartdivTsa",
-      am4plugins_timeline.SerpentineChart
-    );
-    chart.curveContainer.padding(20, 20, 20, 20);
-    chart.levelCount = 8;
-    chart.orientation = "horizontal";
-    chart.fontSize = 11;
+    let chart = am4core.create("chartdivIA", am4charts.PieChart);
 
-    let colorSet = new am4core.ColorSet();
-    colorSet.saturation = 0.6;
+    // Add and configure Series
+    let pieSeries = chart.series.push(new am4charts.PieSeries());
+    pieSeries.dataFields.value = "litres";
+    pieSeries.dataFields.category = "country";
 
-    chart.data = [
+    /// change
+    pieSeries.radius = 60;
+
+    // Let's cut a hole in our Pie chart the size of 30% the radius
+    chart.innerRadius = am4core.percent(30);
+
+    // Put a thick white border around each Slice
+    pieSeries.slices.template.stroke = am4core.color("#fff");
+    pieSeries.slices.template.strokeWidth = 2;
+    pieSeries.slices.template.strokeOpacity = 1;
+    // change the cursor on hover to make it apparent the object can be interacted with
+    pieSeries.slices.template.cursorOverStyle = [
       {
-        category: "Routine #1",
-        start: "2016-01-10",
-        end: "2016-01-13",
-        color: colorSet.getIndex(0),
-        task: "Gathering requirements",
-      },
-      {
-        category: "Routine #1",
-        start: "2016-02-05",
-        end: "2016-04-18",
-        color: colorSet.getIndex(0),
-        task: "Development",
-      },
-      {
-        category: "Routine #2",
-        start: "2016-01-08",
-        end: "2016-01-10",
-        color: colorSet.getIndex(5),
-        task: "Gathering requirements",
-      },
-      {
-        category: "Routine #2",
-        start: "2016-01-12",
-        end: "2016-01-15",
-        color: colorSet.getIndex(5),
-        task: "Producing specifications",
-      },
-      {
-        category: "Routine #2",
-        start: "2016-01-16",
-        end: "2016-02-05",
-        color: colorSet.getIndex(5),
-        task: "Development",
-      },
-      {
-        category: "Routine #2",
-        start: "2016-02-10",
-        end: "2016-02-18",
-        color: colorSet.getIndex(5),
-        task: "Testing and QA",
-      },
-      {
-        category: "",
-        task: "",
-      },
-      {
-        category: "Routine #3",
-        start: "2016-01-01",
-        end: "2016-01-19",
-        color: colorSet.getIndex(9),
-        task: "Gathering requirements",
-      },
-      {
-        category: "Routine #3",
-        start: "2016-02-01",
-        end: "2016-02-10",
-        color: colorSet.getIndex(9),
-        task: "Producing specifications",
-      },
-      {
-        category: "Routine #3",
-        start: "2016-03-10",
-        end: "2016-04-15",
-        color: colorSet.getIndex(9),
-        task: "Development",
-      },
-      {
-        category: "Routine #3",
-        start: "2016-04-20",
-        end: "2016-04-30",
-        color: colorSet.getIndex(9),
-        task: "Testing and QA",
-      },
-      {
-        category: "Routine #4",
-        start: "2016-01-15",
-        end: "2016-02-12",
-        color: colorSet.getIndex(15),
-        task: "Gathering requirements",
-      },
-      {
-        category: "Routine #4",
-        start: "2016-02-25",
-        end: "2016-03-10",
-        color: colorSet.getIndex(15),
-        task: "Development",
-      },
-      {
-        category: "Routine #4",
-        start: "2016-03-23",
-        end: "2016-04-29",
-        color: colorSet.getIndex(15),
-        task: "Testing and QA",
+        property: "cursor",
+        value: "pointer",
       },
     ];
 
-    chart.dateFormatter.dateFormat = "yyyy-MM-dd";
-    chart.dateFormatter.inputDateFormat = "yyyy-MM-dd";
+    pieSeries.alignLabels = false;
+    // pieSeries.labels.template.bent = true;
+    // pieSeries.labels.template.radius = 3;
+    pieSeries.labels.template.padding(0, 0, 0, 0);
 
-    let categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis() as any);
-    categoryAxis.dataFields.category = "category";
-    categoryAxis.renderer.grid.template.disabled = true;
-    categoryAxis.renderer.labels.template.paddingRight = 25;
-    categoryAxis.renderer.minGridDistance = 10;
-    categoryAxis.renderer.innerRadius = -60;
-    categoryAxis.renderer.radius = 60;
+    pieSeries.ticks.template.disabled = true;
 
-    let dateAxis = chart.xAxes.push(new am4charts.DateAxis() as any);
-    dateAxis.renderer.minGridDistance = 70;
-    dateAxis.baseInterval = { count: 1, timeUnit: "day" };
-
-    dateAxis.renderer.tooltipLocation = 0;
-    dateAxis.startLocation = -0.5;
-    dateAxis.renderer.line.strokeDasharray = "1,4";
-    dateAxis.renderer.line.strokeOpacity = 0.7;
-    dateAxis.tooltip.background.fillOpacity = 0.2;
-    dateAxis.tooltip.background.cornerRadius = 5;
-    dateAxis.tooltip.label.fill = new am4core.InterfaceColorSet().getFor(
-      "alternativeBackground"
+    // Create a base filter effect (as if it's not there) for the hover to return to
+    let shadow = pieSeries.slices.template.filters.push(
+      new am4core.DropShadowFilter()
     );
-    dateAxis.tooltip.label.paddingTop = 7;
+    shadow.opacity = 0;
 
-    let labelTemplate = dateAxis.renderer.labels.template;
-    labelTemplate.verticalCenter = "middle";
-    labelTemplate.fillOpacity = 0.7;
-    labelTemplate.background.fill = new am4core.InterfaceColorSet().getFor(
-      "background"
-    );
-    labelTemplate.background.fillOpacity = 1;
-    labelTemplate.padding(7, 7, 7, 7);
+    // Create hover state
+    let hoverState = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
 
-    let categoryAxisLabelTemplate = categoryAxis.renderer.labels.template;
-    categoryAxisLabelTemplate.horizontalCenter = "left";
-    categoryAxisLabelTemplate.adapter.add("rotation", function (
-      rotation,
-      target
-    ) {
-      let position = dateAxis.valueToPosition(dateAxis.min);
-      return dateAxis.renderer.positionToAngle(position) + 90;
-    });
+    // Slightly shift the shadow and make it more prominent on hover
+    let hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter());
+    hoverShadow.opacity = 0.7;
+    hoverShadow.blur = 5;
 
-    let series1 = chart.series.push(
-      new am4plugins_timeline.CurveColumnSeries()
-    );
-    series1.columns.template.height = am4core.percent(20);
-    series1.columns.template.tooltipText =
-      "{task}: [bold]{openDateX}[/] - [bold]{dateX}[/]";
+    // Add a legend
+    // chart.legend = new am4charts.Legend();
 
-    series1.dataFields.openDateX = "start";
-    series1.dataFields.dateX = "end";
-    series1.dataFields.categoryY = "category";
-    series1.columns.template.propertyFields.fill = "color"; // get color from data
-    series1.columns.template.propertyFields.stroke = "color";
-    series1.columns.template.strokeOpacity = 0;
-
-    let bullet = new am4charts.CircleBullet();
-    series1.bullets.push(bullet);
-    bullet.circle.radius = 3;
-    bullet.circle.strokeOpacity = 0;
-    bullet.propertyFields.fill = "color";
-    bullet.locationX = 0;
-
-    let bullet2 = new am4charts.CircleBullet();
-    series1.bullets.push(bullet2);
-    bullet2.circle.radius = 3;
-    bullet2.circle.strokeOpacity = 0;
-    bullet2.propertyFields.fill = "color";
-    bullet2.locationX = 1;
-
-    chart.scrollbarX = new am4core.Scrollbar();
-    chart.scrollbarX.align = "center";
-    chart.scrollbarX.width = am4core.percent(90);
-
-    let cursor = new am4plugins_timeline.CurveCursor();
-    chart.cursor = cursor;
-    cursor.xAxis = dateAxis;
-    cursor.yAxis = categoryAxis;
-    cursor.lineY.disabled = true;
-    cursor.lineX.strokeDasharray = "1,4";
-    cursor.lineX.strokeOpacity = 1;
-
-    dateAxis.renderer.tooltipLocation2 = 0;
-    categoryAxis.cursorTooltipEnabled = false;
-
-    // this.chart = chart
-  }
-
-  initChart2() {
-    let chart = am4core.create("chartdivTsa2", am4charts.XYChart3D);
-
-    // Add data
     chart.data = [
       {
-        country: "Jan",
-        year2017: 2000,
-        year2018: 1900,
+        country: "Bore Pile",
+        litres: 301.9,
       },
       {
-        country: "Feb",
-        year2017: 1700,
-        year2018: 1600,
+        country: "Micro Pile",
+        litres: 165.8,
       },
       {
-        country: "Mar",
-        year2017: 2080,
-        year2018: 2090,
-      },
-      {
-        country: "Apr",
-        year2017: 2060,
-        year2018: 2030,
-      },
-      {
-        country: "May",
-        year2017: 1400,
-        year2018: 2010,
-      },
-      {
-        country: "Jun",
-        year2017: 2060,
-        year2018: 2090,
-      },
-      {
-        country: "Jul",
-        year2017: 3400,
-        year2018: 3200,
-      },
-      {
-        country: "Aug",
-        year2017: 3000,
-        year2018: 2900,
-      },
-      {
-        country: "Sep",
-        year2017: 3000,
-        year2018: 2100,
-      },
-      {
-        country: "Oct",
-        year2017: 3800,
-        year2018: 3600,
-      },
-      {
-        country: "Nov",
-        year2017: 2900,
-        year2018: 3400,
-      },
-      {
-        country: "Dec",
-        year2017: 3800,
-        year2018: 4000,
+        country: "Crosshead",
+        litres: 139.9,
       },
     ];
-
-    // Create axes
-    let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-    categoryAxis.dataFields.category = "country";
-    categoryAxis.renderer.grid.template.location = 0;
-    categoryAxis.renderer.minGridDistance = 30;
-
-    let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-    valueAxis.title.text = "Value";
-    valueAxis.renderer.labels.template.adapter.add("text", function (text) {
-      return text + "%";
-    });
-
-    // Create series
-    let series = chart.series.push(new am4charts.ColumnSeries3D());
-    series.dataFields.valueY = "year2017";
-    series.dataFields.categoryX = "country";
-    series.name = "Year 2017";
-    series.clustered = false;
-    series.columns.template.tooltipText =
-      "Value in {category} (2017): [bold]{valueY}[/]";
-    series.columns.template.fillOpacity = 0.9;
-
-    let series2 = chart.series.push(new am4charts.ColumnSeries3D());
-    series2.dataFields.valueY = "year2018";
-    series2.dataFields.categoryX = "country";
-    series2.name = "Year 2018";
-    series2.clustered = false;
-    series2.columns.template.tooltipText =
-      "Value in {category} (2018): [bold]{valueY}[/]";
-  }
-
-  initChart3() {
-    let chart = am4core.create("chartdivTsa3", am4charts.GaugeChart);
-    chart.innerRadius = am4core.percent(82);
-
-    /**
-     * Normal axis
-     */
-
-    let axis = chart.xAxes.push(new am4charts.ValueAxis() as any);
-    axis.min = 0;
-    axis.max = 100;
-    axis.strictMinMax = true;
-    axis.renderer.radius = am4core.percent(80);
-    axis.renderer.inside = true;
-    axis.renderer.line.strokeOpacity = 1;
-    axis.renderer.ticks.template.disabled = false;
-    axis.renderer.ticks.template.strokeOpacity = 1;
-    axis.renderer.ticks.template.length = 10;
-    axis.renderer.grid.template.disabled = true;
-    axis.renderer.labels.template.radius = 40;
-    axis.renderer.labels.template.adapter.add("text", function (text) {
-      return text + "%";
-    });
-
-    /**
-     * Axis for ranges
-     */
-
-    let colorSet = new am4core.ColorSet();
-
-    let axis2 = chart.xAxes.push(new am4charts.ValueAxis() as any);
-    axis2.min = 0;
-    axis2.max = 100;
-    axis2.strictMinMax = true;
-    axis2.renderer.labels.template.disabled = true;
-    axis2.renderer.ticks.template.disabled = true;
-    axis2.renderer.grid.template.disabled = true;
-
-    let range0 = axis2.axisRanges.create();
-    range0.value = 0;
-    range0.endValue = 50;
-    range0.axisFill.fillOpacity = 1;
-    range0.axisFill.fill = colorSet.getIndex(0);
-
-    let range1 = axis2.axisRanges.create();
-    range1.value = 50;
-    range1.endValue = 100;
-    range1.axisFill.fillOpacity = 1;
-    range1.axisFill.fill = colorSet.getIndex(2);
-
-    /**
-     * Label
-     */
-
-    let label = chart.radarContainer.createChild(am4core.Label);
-    label.isMeasured = false;
-    label.fontSize = 45;
-    label.x = am4core.percent(50);
-    label.y = am4core.percent(100);
-    label.horizontalCenter = "middle";
-    label.verticalCenter = "bottom";
-    label.text = "50%";
-
-    /**
-     * Hand
-     */
-
-    let hand = chart.hands.push(new am4charts.ClockHand());
-    hand.axis = axis2;
-    hand.innerRadius = am4core.percent(20);
-    hand.startWidth = 10;
-    hand.pin.disabled = true;
-    hand.value = 50;
-
-    hand.events.on("propertychanged", function (ev) {
-      range0.endValue = ev.target.value;
-      range1.value = ev.target.value;
-      label.text = axis2.positionToValue(hand.currentPosition).toFixed(1);
-      axis2.invalidate();
-    });
-
-    setInterval(function () {
-      let value = Math.round(Math.random() * 100);
-      let animation = new am4core.Animation(
-        hand,
-        {
-          property: "value",
-          to: value,
-        },
-        1000,
-        am4core.ease.cubicOut
-      ).start();
-    }, 2000);
   }
 }

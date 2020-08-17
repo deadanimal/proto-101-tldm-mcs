@@ -52,33 +52,33 @@ export const ROUTES: RouteInfo[] = [
     // ],
   },
   {
-    path: "/admin/routine-maintenance",
+    path: "/admin/tactical-navigation",
     title: "Tactical Navigation",
-    type: "sub",
+    type: "link",
     icontype: "fas fa-archive text-default",
-    collapse: "RM",
-    isCollapsed: true,
-    children: [
-      { path: "dashboard", title: "Progress Dashboard", type: "link" },
-      { path: "details", title: "Routine Maintenance", type: "link" },
-    ],
+    // collapse: "RM",
+    // isCollapsed: true,
+    // children: [
+    //   { path: "dashboard", title: "Progress Dashboard", type: "link" },
+    //   { path: "details", title: "Routine Maintenance", type: "link" },
+    // ],
   },
   {
     path: "/admin/heavy-maintenance",
     title: "Equipment Status and Control",
-    type: "sub",
+    type: "link",
     icontype: "fas fa-folder-open text-default",
-    collapse: "RM",
-    isCollapsed: true,
-    children: [
-      {
-        path: "notification-defect",
-        title: "Surface Warfare",
-        type: "link",
-      },
-      { path: "work-order", title: "Work Order", type: "link" },
-      { path: "dashboard", title: "Budget, Panalty & KPI", type: "link" },
-    ],
+    // collapse: "RM",
+    // isCollapsed: true,
+    // children: [
+    //   {
+    //     path: "notification-defect",
+    //     title: "Surface Warfare",
+    //     type: "link",
+    //   },
+    //   { path: "work-order", title: "Work Order", type: "link" },
+    //   { path: "dashboard", title: "Budget, Panalty & KPI", type: "link" },
+    // ],
   },
   {
     path: "/admin/work-emergency",

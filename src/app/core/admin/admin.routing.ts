@@ -47,14 +47,15 @@ export const AdminRoutes: Routes = [
       },
       {
         path: "heavy-maintenance",
-        children: [
-          { path: "dashboard", component: HeavyMaintenanceComponent },
-          {
-            path: "notification-defect",
-            component: HmNotificationDefectComponent,
-          },
-          { path: "work-order", component: HmWorkOrderComponent },
-        ],
+        component: HeavyMaintenanceComponent,
+        // children: [
+        //   { path: "dashboard", component: HeavyMaintenanceComponent },
+        //   {
+        //     path: "notification-defect",
+        //     component: HmNotificationDefectComponent,
+        //   },
+        //   { path: "work-order", component: HmWorkOrderComponent },
+        // ],
       },
       {
         path: "maintenance-budget-alocation",
@@ -64,18 +65,18 @@ export const AdminRoutes: Routes = [
         path: "kpi-module",
         component: KpiModuleComponent,
       },
-      {
-        path: "routine-maintenance",
-        children: [
-          { path: "details", component: RoutineMaintenanceComponent },
-          { path: "dashboard", component: RoutineMaintenanceDetailsComponent },
-        ],
-      },
+      // {
+      // path: "routine-maintenance",
+      // children: [
+      { path: "tactical-navigation", component: RoutineMaintenanceComponent },
+      //     { path: "dashboard", component: RoutineMaintenanceDetailsComponent },
+      //   ],
+      // },
       // {
       //   path: "asset-inventory",
       //   children: [
       { path: "asset-inventory", component: AssetInventoryComponent },
-      //     { path: "asset-warranty", component: AssetWarrantyComponent },
+      { path: "asset-warranty", component: AssetWarrantyComponent },
       //   ],
       // },
       // {
