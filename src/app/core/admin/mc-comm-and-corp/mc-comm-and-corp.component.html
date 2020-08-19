@@ -35,7 +35,7 @@
     <div class="col">
       <div class="card">
         <div class="card-header bg-secondary">
-          <h3 class="m-0">Gun Predictor</h3>
+          <h3 class="m-0">Chart</h3>
         </div>
         <div class="card-body">
           <div class="chart">
@@ -47,11 +47,23 @@
     <div class="col">
       <div class="card">
         <div class="card-header bg-secondary">
-          <h3 class="m-0">Gun Simulator</h3>
+          <h3 class="m-0">Chart</h3>
         </div>
         <div class="card-body">
           <div class="chart">
             <div class="amchart" id="chartdivAcWarn1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-header bg-secondary">
+          <h3 class="m-0">Chart</h3>
+        </div>
+        <div class="card-body">
+          <div class="chart">
+            <div class="amchart" id="chartdivAcWarn2"></div>
           </div>
         </div>
       </div>
@@ -63,7 +75,7 @@
       <div class="card">
         <div class="card-header bg-secondary">
           <div class="row">
-            <div class="col">Warning</div>
+            <div class="col">Map</div>
             <div class="col text-right">
               <button
                 class="btn btn-default btn-sm"
@@ -75,7 +87,7 @@
           </div>
         </div>
         <div
-          style="height: 350px;"
+          style="height: 400px;"
           leaflet
           [leafletOptions]="options"
           [leafletLayers]="layers"
@@ -85,71 +97,9 @@
     <div class="col">
       <div class="card">
         <div class="card-header bg-secondary">
-          <h5 class="h3 mb-0">Warship</h5>
+          <h3 class="m-0">Chart</h3>
         </div>
-
-        <div class="card-body">
-          <ul class="list-group list-group-flush list my--3">
-            <li class="list-group-item px-0">
-              <div class="row align-items-center">
-                <div class="col-auto">
-                  <a class="avatar" href="javascript:void(0)">
-                    <img
-                      alt="Image placeholder"
-                      src="assets/img/google/ship2.png"
-                    />
-                  </a>
-                </div>
-
-                <div class="col ml--2">
-                  <h4 class="mb-0">
-                    Warship 1
-                    <a href="javascript:void(0)"> </a>
-                  </h4>
-
-                  <span class="text-warning"> ● </span>
-
-                  <small>Alert Level low </small>
-                </div>
-
-                <div class="col-auto">
-                  <button class="btn btn-sm btn-primary" type="button">
-                    Add
-                  </button>
-                </div>
-              </div>
-            </li>
-
-            <li class="list-group-item px-0">
-              <div class="row align-items-center">
-                <div class="col-auto">
-                  <a class="avatar" href="javascript:void(0)">
-                    <img
-                      alt="Image placeholder"
-                      src="assets/img/google/ship1.png"
-                    />
-                  </a>
-                </div>
-
-                <div class="col ml--2">
-                  <h4 class="mb-0">
-                    <a href="javascript:void(0)"> Warship 2 </a>
-                  </h4>
-
-                  <span class="text-success"> ● </span>
-
-                  <small> Alert Level low </small>
-                </div>
-
-                <div class="col-auto">
-                  <button class="btn btn-sm btn-primary" type="button">
-                    Add
-                  </button>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
+        <div style="width: 100%; height: 400px;" id="chartdivAcWarn3"></div>
       </div>
     </div>
   </div>
