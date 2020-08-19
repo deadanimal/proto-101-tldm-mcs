@@ -372,12 +372,12 @@ export class AcForecastsComponent implements OnInit, OnDestroy {
     createSeries("china", "China");
 
     // Legend
-    chart.legend = new am4charts.Legend();
-    chart.legend.itemContainers.template.togglable = false;
-    chart.legend.itemContainers.template.cursorOverStyle =
-      am4core.MouseCursorStyle.default;
-    chart.legend.position = "right";
-    chart.legend.reverseOrder = true;
+    // chart.legend = new am4charts.Legend();
+    // chart.legend.itemContainers.template.togglable = false;
+    // chart.legend.itemContainers.template.cursorOverStyle =
+    //   am4core.MouseCursorStyle.default;
+    // chart.legend.position = "right";
+    // chart.legend.reverseOrder = true;
 
     // Cursor
     chart.cursor = new am4charts.XYCursor();
