@@ -4,6 +4,8 @@ import {
   OnDestroy,
   NgZone,
   TemplateRef,
+  ElementRef,
+  ViewChild,
 } from "@angular/core";
 import { Audit } from "src/assets/mock/admin-audit/audit.model";
 import { MocksService } from "src/app/shared/services/mocks/mocks.service";
@@ -12,6 +14,8 @@ import * as moment from "moment";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+// import am4themes_kelly from "@amcharts/amcharts4/themes/kelly";
+// am4core.useTheme(am4themes_kelly);
 am4core.useTheme(am4themes_animated);
 
 //
@@ -29,7 +33,10 @@ import { LoadingBarService } from "@ngx-loading-bar/core";
 import { AuthService } from "src/app/shared/services/auth/auth.service";
 import { NotifyService } from "src/app/shared/handler/notify/notify.service";
 import { Router, ActivatedRoute } from "@angular/router";
+import { MapService } from "src/app/shared/services/map/map.service";
+import { Map, NavigationControl } from "mapbox-gl";
 import { tileLayer, latLng, marker, icon } from "leaflet";
+import { BsDropdownConfig } from "ngx-bootstrap/dropdown";
 
 export enum SelectionType {
   single = "single",
@@ -68,35 +75,32 @@ export class McCommAndCorpComponent implements OnInit, OnDestroy {
   tableActiveRow: any;
   tableRows: Audit[] = [];
   SelectionType = SelectionType;
-  listAmmStandardDesc: any = [
+  listBillStatement: any = [
     {
-      code: "10",
-      name: "Normal bill",
-      account: "213123123",
-      amount: "RM300",
-      ageing: "Active",
-      cust: "Business",
-      geo: "Melaka",
+      cust: "Consumer",
+      cust_code: "Cusumer 10",
+      bill_sce: "1st Billing",
+      pro_serv: "unifi",
+      season: "Hari Raya",
+      created: "Ali",
       created_at: "2019-07-27T01:07:14Z",
     },
     {
-      code: "20",
-      name: "Low bill",
-      account: "213123124",
-      amount: "RM350",
-      ageing: "Inactive",
-      cust: "Business",
-      geo: "Selangor",
+      cust: "SME",
+      cust_code: "SME 20",
+      bill_sce: "2nd Billing",
+      pro_serv: "voice",
+      season: "Hari Raya",
+      created: "Jannah",
       created_at: "2019-07-27T01:07:14Z",
     },
     {
-      code: "30",
-      name: "High bill",
-      account: "213123125",
-      amount: "RM400",
-      ageing: "Active",
-      cust: "Personal",
-      geo: "Perlis",
+      cust: "TMOne",
+      cust_code: "TMOne 30",
+      bill_sce: "2nd Billing",
+      pro_serv: "unifi",
+      season: "Hari Raya",
+      created: "Yaya",
       created_at: "2019-07-27T01:07:14Z",
     },
   ];
@@ -108,22 +112,58 @@ export class McCommAndCorpComponent implements OnInit, OnDestroy {
         attribution: "...",
       }),
     ],
-    zoom: 8,
-    center: latLng(3.4582308051504707, 101.5892640625),
+    zoom: 12,
+    center: latLng(2.733335, 101.377733),
   };
   layers = [
     // circle([ 46.95, -122 ], { radius: 5000 }),
     // polygon([[ 46.8, -121.85 ], [ 46.92, -121.92 ], [ 46.87, -121.8 ]]),
-    marker([3.4582308051504707, 101.5892640625], {
+    marker([2.722361, 101.43545], {
       icon: icon({
-        iconSize: [25, 41],
+        iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/brand/pointer.png",
+        iconUrl: "../assets/img/google/ship1.png",
+      }),
+    }),
+    // circle([ 46.95, -122 ], { radius: 5000 }),
+    // polygon([[ 46.8, -121.85 ], [ 46.92, -121.92 ], [ 46.87, -121.8 ]]),
+    marker([2.76077, 101.385978], {
+      icon: icon({
+        iconSize: [40, 40],
+        iconAnchor: [13, 41],
+        iconUrl: "../assets/img/google/ship1.png",
+      }),
+    }),
+    marker([2.738822, 101.369488], {
+      icon: icon({
+        iconSize: [40, 40],
+        iconAnchor: [13, 41],
+        iconUrl: "../assets/img/google/ship1.png",
+      }),
+    }),
+    marker([2.733335, 101.292532], {
+      icon: icon({
+        iconSize: [40, 40],
+        iconAnchor: [13, 41],
+        iconUrl: "../assets/img/google/ship2.png",
+      }),
+    }),
+    marker([2.681208, 101.322765], {
+      icon: icon({
+        iconSize: [40, 40],
+        iconAnchor: [13, 41],
+        iconUrl: "../assets/img/google/ship2.png",
       }),
     }),
   ];
 
+  @ViewChild("mapEl", { static: true })
+  mapEl: ElementRef<HTMLDivElement>;
+
+  private map: Map;
+
   constructor(
+    private mapSrv: MapService,
     private mockService: MocksService,
     private notifyService: NotifyService,
     private zone: NgZone,
@@ -141,6 +181,151 @@ export class McCommAndCorpComponent implements OnInit, OnDestroy {
     this.getCharts();
   }
 
+  // ngAfterViewInit(): void {
+  //   this.map = new Map({
+  //     container: this.mapEl.nativeElement,
+  //     style: "mapbox://styles/mapbox/dark-v10",
+  //     center: { lng: 113.662942, lat: 3.337954 },
+  //     zoom: 4,
+  //     pitch: 20,
+  //     attributionControl: false,
+  //   });
+  //   this.map.addControl(
+  //     new NavigationControl({
+  //       showZoom: true,
+  //       showCompass: true,
+  //       visualizePitch: true,
+  //     }),
+  //     "top-right"
+  //   );
+  //   this.mapSrv.map.next(this.map);
+  //   this.map.on("load", () => {
+  //     console.log("map loaded");
+  //     this.mapSrv.map.complete();
+  //     // Add a geojson point source.
+  //     // Heatmap layers also work with a vector tile source.
+  //     this.map.addSource("earthquakes", {
+  //       type: "geojson",
+  //       data: "https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson",
+  //     });
+  //     this.map.addLayer(
+  //       {
+  //         id: "earthquakes-heat",
+  //         type: "heatmap",
+  //         source: "earthquakes",
+  //         maxzoom: 9,
+  //         paint: {
+  //           // Increase the heatmap weight based on frequency and property magnitude
+  //           "heatmap-weight": [
+  //             "interpolate",
+  //             ["linear"],
+  //             ["get", "mag"],
+  //             0,
+  //             0,
+  //             6,
+  //             1,
+  //           ],
+  //           // Increase the heatmap color weight weight by zoom level
+  //           // heatmap-intensity is a multiplier on top of heatmap-weight
+  //           "heatmap-intensity": [
+  //             "interpolate",
+  //             ["linear"],
+  //             ["zoom"],
+  //             0,
+  //             1,
+  //             9,
+  //             3,
+  //           ],
+  //           // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
+  //           // Begin color ramp at 0-stop with a 0-transparancy color
+  //           // to create a blur-like effect.
+  //           "heatmap-color": [
+  //             "interpolate",
+  //             ["linear"],
+  //             ["heatmap-density"],
+  //             0,
+  //             "rgba(33,102,172,0)",
+  //             0.2,
+  //             "rgb(103,169,207)",
+  //             0.4,
+  //             "rgb(209,229,240)",
+  //             0.6,
+  //             "rgb(253,219,199)",
+  //             0.8,
+  //             "rgb(239,138,98)",
+  //             1,
+  //             "rgb(178,24,43)",
+  //           ],
+  //           // Adjust the heatmap radius by zoom level
+  //           "heatmap-radius": [
+  //             "interpolate",
+  //             ["linear"],
+  //             ["zoom"],
+  //             0,
+  //             2,
+  //             9,
+  //             20,
+  //           ],
+  //           // Transition from heatmap to circle layer by zoom level
+  //           "heatmap-opacity": [
+  //             "interpolate",
+  //             ["linear"],
+  //             ["zoom"],
+  //             7,
+  //             1,
+  //             9,
+  //             0,
+  //           ],
+  //         },
+  //       },
+  //       "waterway-label"
+  //     );
+  //     this.map.addLayer(
+  //       {
+  //         id: "earthquakes-point",
+  //         type: "circle",
+  //         source: "earthquakes",
+  //         minzoom: 7,
+  //         paint: {
+  //           // Size circle radius by earthquake magnitude and zoom level
+  //           "circle-radius": [
+  //             "interpolate",
+  //             ["linear"],
+  //             ["zoom"],
+  //             7,
+  //             ["interpolate", ["linear"], ["get", "mag"], 1, 1, 6, 4],
+  //             16,
+  //             ["interpolate", ["linear"], ["get", "mag"], 1, 5, 6, 50],
+  //           ],
+  //           // Color circle by earthquake magnitude
+  //           "circle-color": [
+  //             "interpolate",
+  //             ["linear"],
+  //             ["get", "mag"],
+  //             1,
+  //             "rgba(33,102,172,0)",
+  //             2,
+  //             "rgb(103,169,207)",
+  //             3,
+  //             "rgb(209,229,240)",
+  //             4,
+  //             "rgb(253,219,199)",
+  //             5,
+  //             "rgb(239,138,98)",
+  //             6,
+  //             "rgb(178,24,43)",
+  //           ],
+  //           "circle-stroke-color": "white",
+  //           "circle-stroke-width": 1,
+  //           // Transition from heatmap to circle layer by zoom level
+  //           "circle-opacity": ["interpolate", ["linear"], ["zoom"], 7, 0, 8, 1],
+  //         },
+  //       },
+  //       "waterway-label"
+  //     );
+  //   });
+  // }
+
   ngOnDestroy() {
     this.zone.runOutsideAngular(() => {
       if (this.chart) {
@@ -149,29 +334,6 @@ export class McCommAndCorpComponent implements OnInit, OnDestroy {
     });
   }
 
-  // getData() {
-  //   this.mockService.getAll(this.listReceipt).subscribe(
-  //     (res) => {
-  //       // Success
-  //       this.tableRows = [...res];
-  //       this.tableTemp = this.tableRows.map((prop, key) => {
-  //         return {
-  //           ...prop,
-  //           id: key,
-  //         };
-  //       });
-  //       console.log("Svc: ", this.tableTemp);
-  //     },
-  //     () => {
-  //       // Unsuccess
-  //     },
-  //     () => {
-  //       // After
-  //       this.getChart();
-  //     }
-  //   );
-  // }
-
   openModal(modalRef: TemplateRef<any>, row) {
     // if (row) {
     //   console.log(row);
@@ -179,7 +341,7 @@ export class McCommAndCorpComponent implements OnInit, OnDestroy {
     // }
     this.modal = this.modalService.show(
       modalRef,
-      Object.assign({}, { class: "gray modal-lg" })
+      Object.assign({}, { class: "gray modal-xl" })
     );
     // this.modal = this.modalService.show(modalRef, this.modalConfig);
   }
@@ -281,445 +443,395 @@ export class McCommAndCorpComponent implements OnInit, OnDestroy {
 
   getCharts() {
     this.zone.runOutsideAngular(() => {
-      // this.getChart();
-      // this.getChart1();
+      this.getChart();
+      this.getChart1();
+
       // this.getChart2();
       // this.getChart3();
       // this.getChart4();
       // this.getChart5();
-      this.getChart6();
+      // this.getChart6();
     });
   }
 
   getChart() {
-    //chart nate susoh
-    let container = am4core.create("chartdivCommCorp", am4core.Container);
-    container.layout = "grid";
-    container.fixedWidthGrid = false;
-    container.width = am4core.percent(100);
-    container.height = am4core.percent(100);
+    let chart = am4core.create("chartdivAcWarn", am4charts.RadarChart);
 
-    // Color set
-    let colors = new am4core.ColorSet();
+    /* Add data */
+    chart.data = [
+      {
+        country: "Lithuania",
+        litres: 501,
+        units: 250,
+      },
+      {
+        country: "Czech Republic",
+        litres: 301,
+        units: 222,
+      },
+      {
+        country: "Ireland",
+        litres: 266,
+        units: 179,
+      },
+      {
+        country: "Germany",
+        litres: 165,
+        units: 298,
+      },
+      {
+        country: "Australia",
+        litres: 139,
+        units: 299,
+      },
+      {
+        country: "Austria",
+        litres: 336,
+        units: 185,
+      },
+      {
+        country: "UK",
+        litres: 290,
+        units: 150,
+      },
+      {
+        country: "Belgium",
+        litres: 325,
+        units: 382,
+      },
+      {
+        country: "The Netherlands",
+        litres: 40,
+        units: 172,
+      },
+    ];
 
-    // Functions that create various sparklines
-    function createLine(title, data, color) {
-      let chart = container.createChild(am4charts.XYChart);
-      chart.width = am4core.percent(45);
-      chart.height = 70;
+    /* Create axes */
+    let xAxis = chart.xAxes.push(new am4charts.ValueAxis() as any);
+    xAxis.renderer.maxLabelPosition = 0.99;
 
-      chart.data = data;
+    let yAxis = chart.yAxes.push(new am4charts.ValueAxis() as any);
+    yAxis.renderer.labels.template.verticalCenter = "bottom";
+    yAxis.renderer.labels.template.horizontalCenter = "right";
+    yAxis.renderer.maxLabelPosition = 0.99;
+    yAxis.renderer.labels.template.paddingBottom = 1;
+    yAxis.renderer.labels.template.paddingRight = 3;
 
-      chart.titles.template.fontSize = 10;
-      chart.titles.template.textAlign = "start";
-      chart.titles.template.isMeasured = false;
-      chart.titles.create().text = title;
+    /* Create and configure series */
+    let series1 = chart.series.push(new am4charts.RadarSeries());
+    series1.bullets.push(new am4charts.CircleBullet());
+    series1.strokeOpacity = 0;
+    series1.dataFields.valueX = "x";
+    series1.dataFields.valueY = "y";
+    series1.name = "Series #1";
+    series1.sequencedInterpolation = true;
+    series1.sequencedInterpolationDelay = 10;
+    series1.data = [
+      { x: 83, y: 5.1 },
+      { x: 44, y: 5.8 },
+      { x: 76, y: 9 },
+      { x: 2, y: 1.4 },
+      { x: 100, y: 8.3 },
+      { x: 96, y: 1.7 },
+      { x: 68, y: 3.9 },
+      { x: 0, y: 3 },
+      { x: 100, y: 4.1 },
+      { x: 16, y: 5.5 },
+      { x: 71, y: 6.8 },
+      { x: 100, y: 7.9 },
+      { x: 9, y: 6.8 },
+      { x: 85, y: 8.3 },
+      { x: 51, y: 6.7 },
+      { x: 95, y: 3.8 },
+      { x: 95, y: 4.4 },
+      { x: 1, y: 0.2 },
+      { x: 107, y: 9.7 },
+      { x: 50, y: 4.2 },
+      { x: 42, y: 9.2 },
+      { x: 35, y: 8 },
+      { x: 44, y: 6 },
+      { x: 64, y: 0.7 },
+      { x: 53, y: 3.3 },
+      { x: 92, y: 4.1 },
+      { x: 43, y: 7.3 },
+      { x: 15, y: 7.5 },
+      { x: 43, y: 4.3 },
+      { x: 90, y: 9.9 },
+    ];
 
-      chart.padding(20, 5, 2, 5);
+    let series2 = chart.series.push(new am4charts.RadarSeries());
+    series2.bullets.push(new am4charts.CircleBullet());
+    series2.strokeOpacity = 0;
+    series2.dataFields.valueX = "x";
+    series2.dataFields.valueY = "y";
+    series2.name = "Series #2";
+    series2.sequencedInterpolation = true;
+    series2.sequencedInterpolationDelay = 10;
+    series2.data = [
+      { x: 178, y: 1.3 },
+      { x: 129, y: 3.4 },
+      { x: 99, y: 2.4 },
+      { x: 80, y: 9.9 },
+      { x: 118, y: 9.4 },
+      { x: 103, y: 8.7 },
+      { x: 91, y: 4.2 },
+      { x: 151, y: 1.2 },
+      { x: 168, y: 5.2 },
+      { x: 168, y: 1.6 },
+      { x: 152, y: 1.2 },
+      { x: 149, y: 3.4 },
+      { x: 182, y: 8.8 },
+      { x: 106, y: 6.7 },
+      { x: 111, y: 9.2 },
+      { x: 130, y: 6.3 },
+      { x: 147, y: 2.9 },
+      { x: 81, y: 8.1 },
+      { x: 138, y: 7.7 },
+      { x: 107, y: 3.9 },
+      { x: 124, y: 0.7 },
+      { x: 130, y: 2.6 },
+      { x: 86, y: 9.2 },
+      { x: 169, y: 7.5 },
+      { x: 122, y: 9.9 },
+      { x: 100, y: 3.8 },
+      { x: 172, y: 4.1 },
+      { x: 140, y: 7.3 },
+      { x: 161, y: 2.3 },
+      { x: 141, y: 0.9 },
+    ];
 
-      let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-      dateAxis.renderer.grid.template.disabled = true;
-      dateAxis.renderer.labels.template.disabled = true;
-      dateAxis.startLocation = 0.5;
-      dateAxis.endLocation = 0.7;
-      dateAxis.cursorTooltipEnabled = false;
+    let series3 = chart.series.push(new am4charts.RadarSeries());
+    series3.bullets.push(new am4charts.CircleBullet());
+    series3.strokeOpacity = 0;
+    series3.dataFields.valueX = "x";
+    series3.dataFields.valueY = "y";
+    series3.name = "Series #3";
+    series3.sequencedInterpolation = true;
+    series3.sequencedInterpolationDelay = 10;
+    series3.data = [
+      { x: 419, y: 4.9 },
+      { x: 417, y: 5.5 },
+      { x: 434, y: 0.1 },
+      { x: 344, y: 2.5 },
+      { x: 279, y: 7.5 },
+      { x: 307, y: 8.4 },
+      { x: 279, y: 9 },
+      { x: 220, y: 8.4 },
+      { x: 204, y: 8 },
+      { x: 446, y: 0.9 },
+      { x: 397, y: 8.9 },
+      { x: 351, y: 1.7 },
+      { x: 393, y: 0.7 },
+      { x: 254, y: 1.8 },
+      { x: 260, y: 0.4 },
+      { x: 300, y: 3.5 },
+      { x: 199, y: 2.7 },
+      { x: 182, y: 5.8 },
+      { x: 173, y: 2 },
+      { x: 201, y: 9.7 },
+      { x: 288, y: 1.2 },
+      { x: 333, y: 7.4 },
+      { x: 308, y: 1.9 },
+      { x: 330, y: 8 },
+      { x: 408, y: 1.7 },
+      { x: 274, y: 0.8 },
+      { x: 296, y: 3.1 },
+      { x: 279, y: 4.3 },
+      { x: 379, y: 5.6 },
+      { x: 175, y: 6.8 },
+    ];
 
-      let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-      valueAxis.min = 0;
-      valueAxis.renderer.grid.template.disabled = true;
-      valueAxis.renderer.baseGrid.disabled = true;
-      valueAxis.renderer.labels.template.disabled = true;
-      valueAxis.cursorTooltipEnabled = false;
+    /* Add legend */
+    chart.legend = new am4charts.Legend();
 
-      chart.cursor = new am4charts.XYCursor();
-      chart.cursor.lineY.disabled = true;
-      chart.cursor.behavior = "none";
-
-      let series = chart.series.push(new am4charts.LineSeries());
-      series.tooltipText = "{date}: [bold]{value}";
-      series.dataFields.dateX = "date";
-      series.dataFields.valueY = "value";
-      series.tensionX = 0.8;
-      series.strokeWidth = 2;
-      series.stroke = color;
-
-      // render data points as bullets
-      let bullet = series.bullets.push(new am4charts.CircleBullet());
-      bullet.circle.opacity = 0;
-      bullet.circle.fill = color;
-      bullet.circle.propertyFields.opacity = "opacity";
-      bullet.circle.radius = 3;
-
-      return chart;
-    }
-
-    function createColumn(title, data, color) {
-      let chart = container.createChild(am4charts.XYChart);
-      chart.width = am4core.percent(45);
-      chart.height = 70;
-
-      chart.data = data;
-
-      chart.titles.template.fontSize = 10;
-      chart.titles.template.textAlign = "start";
-      chart.titles.template.isMeasured = false;
-      chart.titles.create().text = title;
-
-      chart.padding(20, 5, 2, 5);
-
-      let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-      dateAxis.renderer.grid.template.disabled = true;
-      dateAxis.renderer.labels.template.disabled = true;
-      dateAxis.cursorTooltipEnabled = false;
-
-      let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-      valueAxis.min = 0;
-      valueAxis.renderer.grid.template.disabled = true;
-      valueAxis.renderer.baseGrid.disabled = true;
-      valueAxis.renderer.labels.template.disabled = true;
-      valueAxis.cursorTooltipEnabled = false;
-
-      chart.cursor = new am4charts.XYCursor();
-      chart.cursor.lineY.disabled = true;
-
-      let series = chart.series.push(new am4charts.ColumnSeries());
-      series.tooltipText = "{date}: [bold]{value}";
-      series.dataFields.dateX = "date";
-      series.dataFields.valueY = "value";
-      series.strokeWidth = 0;
-      series.fillOpacity = 0.5;
-      series.columns.template.propertyFields.fillOpacity = "opacity";
-      series.columns.template.fill = color;
-
-      return chart;
-    }
-
-    function createPie(data, color) {
-      let chart = container.createChild(am4charts.PieChart);
-      chart.width = am4core.percent(10);
-      chart.height = 70;
-      chart.padding(20, 0, 2, 0);
-
-      chart.data = data;
-
-      // Add and configure Series
-      let pieSeries = chart.series.push(new am4charts.PieSeries());
-      pieSeries.dataFields.value = "value";
-      pieSeries.dataFields.category = "category";
-      pieSeries.labels.template.disabled = true;
-      pieSeries.ticks.template.disabled = true;
-      pieSeries.slices.template.fill = color;
-      pieSeries.slices.template.adapter.add("fill", function (
-        fill: any,
-        target
-      ) {
-        return fill.lighten(0.1 * target.dataItem.index);
-      });
-      pieSeries.slices.template.stroke = am4core.color("#fff");
-
-      // chart.chartContainer.minHeight = 40;
-      // chart.chartContainer.minWidth = 40;
-
-      return chart;
-    }
-
-    createLine(
-      "(Price)",
-      [
-        { date: new Date(2018, 0, 1, 8, 0, 0), value: 57 },
-        { date: new Date(2018, 0, 1, 9, 0, 0), value: 27 },
-        { date: new Date(2018, 0, 1, 10, 0, 0), value: 24 },
-        { date: new Date(2018, 0, 1, 11, 0, 0), value: 59 },
-        { date: new Date(2018, 0, 1, 12, 0, 0), value: 33 },
-        { date: new Date(2018, 0, 1, 13, 0, 0), value: 46 },
-        { date: new Date(2018, 0, 1, 14, 0, 0), value: 20 },
-        { date: new Date(2018, 0, 1, 15, 0, 0), value: 42 },
-        { date: new Date(2018, 0, 1, 16, 0, 0), value: 59, opacity: 1 },
-      ],
-      colors.getIndex(0)
-    );
-
-    createColumn(
-      "(Turnover)",
-      [
-        { date: new Date(2018, 0, 1, 8, 0, 0), value: 22 },
-        { date: new Date(2018, 0, 1, 9, 0, 0), value: 25 },
-        { date: new Date(2018, 0, 1, 10, 0, 0), value: 40 },
-        { date: new Date(2018, 0, 1, 11, 0, 0), value: 35 },
-        { date: new Date(2018, 0, 1, 12, 0, 0), value: 29 },
-        { date: new Date(2018, 0, 1, 13, 0, 0), value: 1 },
-        { date: new Date(2018, 0, 1, 14, 0, 0), value: 15 },
-        { date: new Date(2018, 0, 1, 15, 0, 0), value: 29 },
-        { date: new Date(2018, 0, 1, 16, 0, 0), value: 33, opacity: 1 },
-      ],
-      colors.getIndex(0)
-    );
-
-    createPie(
-      [
-        { category: "Marketing", value: 501 },
-        { category: "Research", value: 301 },
-        { category: "Sales", value: 201 },
-        { category: "HR", value: 165 },
-      ],
-      colors.getIndex(0)
-    );
-
-    createLine(
-      "(Price)",
-      [
-        { date: new Date(2018, 0, 1, 8, 0, 0), value: 22 },
-        { date: new Date(2018, 0, 1, 9, 0, 0), value: 25 },
-        { date: new Date(2018, 0, 1, 10, 0, 0), value: 40 },
-        { date: new Date(2018, 0, 1, 11, 0, 0), value: 35 },
-        { date: new Date(2018, 0, 1, 12, 0, 0), value: 29 },
-        { date: new Date(2018, 0, 1, 13, 0, 0), value: 1 },
-        { date: new Date(2018, 0, 1, 14, 0, 0), value: 15 },
-        { date: new Date(2018, 0, 1, 15, 0, 0), value: 29 },
-        { date: new Date(2018, 0, 1, 16, 0, 0), value: 33, opacity: 1 },
-      ],
-      colors.getIndex(1)
-    );
-
-    createColumn(
-      "(Turnover)",
-      [
-        { date: new Date(2018, 0, 1, 8, 0, 0), value: 57 },
-        { date: new Date(2018, 0, 1, 9, 0, 0), value: 27 },
-        { date: new Date(2018, 0, 1, 10, 0, 0), value: 24 },
-        { date: new Date(2018, 0, 1, 11, 0, 0), value: 59 },
-        { date: new Date(2018, 0, 1, 12, 0, 0), value: 33 },
-        { date: new Date(2018, 0, 1, 13, 0, 0), value: 46 },
-        { date: new Date(2018, 0, 1, 14, 0, 0), value: 20 },
-        { date: new Date(2018, 0, 1, 15, 0, 0), value: 42 },
-        { date: new Date(2018, 0, 1, 16, 0, 0), value: 59, opacity: 1 },
-      ],
-      colors.getIndex(1)
-    );
-
-    createPie(
-      [
-        { category: "Data 1", value: 130 },
-        { category: "Data 2", value: 450 },
-        { category: "Data 3", value: 400 },
-        { category: "Data 4", value: 200 },
-      ],
-      colors.getIndex(1)
-    );
-
-    createLine(
-      "(Price)",
-      [
-        { date: new Date(2018, 0, 1, 8, 0, 0), value: 16 },
-        { date: new Date(2018, 0, 1, 9, 0, 0), value: 62 },
-        { date: new Date(2018, 0, 1, 10, 0, 0), value: 55 },
-        { date: new Date(2018, 0, 1, 11, 0, 0), value: 34 },
-        { date: new Date(2018, 0, 1, 12, 0, 0), value: 29 },
-        { date: new Date(2018, 0, 1, 13, 0, 0), value: 29 },
-        { date: new Date(2018, 0, 1, 14, 0, 0), value: 28 },
-        { date: new Date(2018, 0, 1, 15, 0, 0), value: 32 },
-        { date: new Date(2018, 0, 1, 16, 0, 0), value: 30, opacity: 1 },
-      ],
-      colors.getIndex(2)
-    );
-
-    createColumn(
-      "(Turnover)",
-      [
-        { date: new Date(2018, 0, 1, 8, 0, 0), value: 50 },
-        { date: new Date(2018, 0, 1, 9, 0, 0), value: 51 },
-        { date: new Date(2018, 0, 1, 10, 0, 0), value: 62 },
-        { date: new Date(2018, 0, 1, 11, 0, 0), value: 60 },
-        { date: new Date(2018, 0, 1, 12, 0, 0), value: 25 },
-        { date: new Date(2018, 0, 1, 13, 0, 0), value: 20 },
-        { date: new Date(2018, 0, 1, 14, 0, 0), value: 70 },
-        { date: new Date(2018, 0, 1, 15, 0, 0), value: 42 },
-        { date: new Date(2018, 0, 1, 16, 0, 0), value: 33, opacity: 1 },
-      ],
-      colors.getIndex(2)
-    );
-
-    createPie(
-      [
-        { category: "Data 1", value: 220 },
-        { category: "Data 2", value: 200 },
-        { category: "Data 3", value: 150 },
-        { category: "Data 4", value: 125 },
-      ],
-      colors.getIndex(2)
-    );
-
-    // FB
-
-    createLine(
-      "(Price)",
-      [
-        { date: new Date(2018, 0, 1, 8, 0, 0), value: 52 },
-        { date: new Date(2018, 0, 1, 9, 0, 0), value: 55 },
-        { date: new Date(2018, 0, 1, 10, 0, 0), value: 35 },
-        { date: new Date(2018, 0, 1, 11, 0, 0), value: 34 },
-        { date: new Date(2018, 0, 1, 12, 0, 0), value: 39 },
-        { date: new Date(2018, 0, 1, 13, 0, 0), value: 42 },
-        { date: new Date(2018, 0, 1, 14, 0, 0), value: 29 },
-        { date: new Date(2018, 0, 1, 15, 0, 0), value: 22 },
-        { date: new Date(2018, 0, 1, 16, 0, 0), value: 15, opacity: 1 },
-      ],
-      colors.getIndex(3)
-    );
-
-    createColumn(
-      "(Turnover)",
-      [
-        { date: new Date(2018, 0, 1, 8, 0, 0), value: 20 },
-        { date: new Date(2018, 0, 1, 9, 0, 0), value: 20 },
-        { date: new Date(2018, 0, 1, 10, 0, 0), value: 25 },
-        { date: new Date(2018, 0, 1, 11, 0, 0), value: 26 },
-        { date: new Date(2018, 0, 1, 12, 0, 0), value: 29 },
-        { date: new Date(2018, 0, 1, 13, 0, 0), value: 27 },
-        { date: new Date(2018, 0, 1, 14, 0, 0), value: 25 },
-        { date: new Date(2018, 0, 1, 15, 0, 0), value: 32 },
-        { date: new Date(2018, 0, 1, 16, 0, 0), value: 30, opacity: 1 },
-      ],
-      colors.getIndex(3)
-    );
-
-    createPie(
-      [
-        { category: "Data 1", value: 120 },
-        { category: "Data 2", value: 150 },
-        { category: "Data 3", value: 125 },
-        { category: "Data 4", value: 250 },
-      ],
-      colors.getIndex(3)
-    );
-
-    this.chart = container;
+    /* Add cursor */
+    chart.cursor = new am4charts.RadarCursor();
   }
 
   getChart1() {
-    // chart half circle
-    let chart = am4core.create("chartdivCommCorp1", am4charts.PieChart);
+    let chart = am4core.create("chartdivAcWarn1", am4charts.RadarChart);
     chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
 
     chart.data = [
       {
-        item: "Lights",
-        value: 40,
+        category: "One",
+        value1: 8,
+        value2: 2,
       },
       {
-        item: "Fridge",
-        value: 30,
+        category: "Two",
+        value1: 11,
+        value2: 4,
       },
       {
-        item: "TV",
-        value: 20,
+        category: "Three",
+        value1: 7,
+        value2: 6,
       },
       {
-        item: "Washing Machine",
-        value: 16,
+        category: "Four",
+        value1: 13,
+        value2: 8,
+      },
+      {
+        category: "Five",
+        value1: 12,
+        value2: 10,
+      },
+      {
+        category: "Six",
+        value1: 15,
+        value2: 12,
+      },
+      {
+        category: "Seven",
+        value1: 9,
+        value2: 14,
+      },
+      {
+        category: "Eight",
+        value1: 6,
+        value2: 16,
       },
     ];
-    chart.radius = am4core.percent(70);
-    chart.innerRadius = am4core.percent(40);
-    chart.startAngle = 180;
-    chart.endAngle = 360;
 
-    let series = chart.series.push(new am4charts.PieSeries());
-    series.dataFields.value = "value";
-    series.dataFields.category = "item";
-    series.ticks.template.disabled = true;
-    series.labels.template.disabled = true;
+    chart.padding(20, 20, 20, 20);
 
-    series.slices.template.cornerRadius = 10;
-    series.slices.template.innerCornerRadius = 7;
-    series.slices.template.draggable = true;
-    series.slices.template.inert = true;
-    series.alignLabels = false;
+    let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis() as any);
+    categoryAxis.dataFields.category = "category";
+    categoryAxis.renderer.labels.template.location = 0.5;
+    categoryAxis.renderer.tooltipLocation = 0.5;
+    categoryAxis.renderer.cellStartLocation = 0.2;
+    categoryAxis.renderer.cellEndLocation = 0.8;
 
-    series.hiddenState.properties.startAngle = 90;
-    series.hiddenState.properties.endAngle = 90;
+    let valueAxis = chart.yAxes.push(new am4charts.ValueAxis() as any);
+    valueAxis.tooltip.disabled = true;
+    valueAxis.renderer.labels.template.horizontalCenter = "left";
+    valueAxis.min = 0;
 
-    //chart.legend = new am4charts.Legend();
+    let series1 = chart.series.push(new am4charts.RadarColumnSeries());
+    series1.columns.template.tooltipText = "{name}: {valueY.value}";
+    series1.columns.template.width = am4core.percent(100);
+    series1.name = "Series 1";
+    series1.dataFields.categoryX = "category";
+    series1.dataFields.valueY = "value1";
+
+    let series2 = chart.series.push(new am4charts.RadarColumnSeries());
+    series2.columns.template.width = am4core.percent(100);
+    series2.columns.template.tooltipText = "{name}: {valueY.value}";
+    series2.name = "Series 2";
+    series2.dataFields.categoryX = "category";
+    series2.dataFields.valueY = "value2";
+
+    chart.seriesContainer.zIndex = -1;
+
+    chart.scrollbarX = new am4core.Scrollbar();
+    chart.scrollbarX.exportable = false;
+    chart.scrollbarY = new am4core.Scrollbar();
+    chart.scrollbarY.exportable = false;
+
+    chart.cursor = new am4charts.RadarCursor();
+    chart.cursor.xAxis = categoryAxis;
+    chart.cursor.fullWidthLineX = true;
+    chart.cursor.lineX.strokeOpacity = 0;
+    chart.cursor.lineX.fillOpacity = 0.1;
+    chart.cursor.lineX.fill = am4core.color("#000000");
   }
 
   getChart2() {
-    // chart ada gambo org
-    let chart = am4core.create("chartdivCommCorp2", am4charts.XYChart);
+    // let chart = am4core.create("chartdivAcWarn2", am4charts.GaugeChart);
+    let chart = am4core.create("chartdivAcWarn2", am4charts.RadarChart);
+    chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
 
-    // Add data
     chart.data = [
       {
-        name: "John",
-        points: 35654,
-        color: chart.colors.next(),
-        bullet: "https://www.amcharts.com/lib/images/faces/A04.png",
+        category: "One",
+        value1: 8,
+        value2: 2,
       },
       {
-        name: "Damon",
-        points: 65456,
-        color: chart.colors.next(),
-        bullet: "https://www.amcharts.com/lib/images/faces/C02.png",
+        category: "Two",
+        value1: 11,
+        value2: 4,
       },
       {
-        name: "Patrick",
-        points: 45724,
-        color: chart.colors.next(),
-        bullet: "https://www.amcharts.com/lib/images/faces/D02.png",
+        category: "Three",
+        value1: 7,
+        value2: 6,
       },
       {
-        name: "Mark",
-        points: 13654,
-        color: chart.colors.next(),
-        bullet: "https://www.amcharts.com/lib/images/faces/E01.png",
+        category: "Four",
+        value1: 13,
+        value2: 8,
+      },
+      {
+        category: "Five",
+        value1: 12,
+        value2: 10,
+      },
+      {
+        category: "Six",
+        value1: 15,
+        value2: 12,
+      },
+      {
+        category: "Seven",
+        value1: 9,
+        value2: 14,
+      },
+      {
+        category: "Eight",
+        value1: 6,
+        value2: 16,
       },
     ];
 
-    // Create axes
-    let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-    categoryAxis.dataFields.category = "name";
-    categoryAxis.renderer.grid.template.disabled = true;
-    categoryAxis.renderer.minGridDistance = 30;
-    categoryAxis.renderer.inside = true;
-    categoryAxis.renderer.labels.template.fill = am4core.color("#fff");
-    categoryAxis.renderer.labels.template.fontSize = 20;
+    chart.padding(20, 20, 20, 20);
 
-    let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-    valueAxis.renderer.grid.template.strokeDasharray = "4,4";
-    valueAxis.renderer.labels.template.disabled = true;
+    let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis() as any);
+    categoryAxis.dataFields.category = "category";
+    categoryAxis.renderer.labels.template.location = 0.5;
+    categoryAxis.renderer.tooltipLocation = 0.5;
+    categoryAxis.renderer.cellStartLocation = 0.2;
+    categoryAxis.renderer.cellEndLocation = 0.8;
+
+    let valueAxis = chart.yAxes.push(new am4charts.ValueAxis() as any);
+    valueAxis.tooltip.disabled = true;
+    valueAxis.renderer.labels.template.horizontalCenter = "left";
     valueAxis.min = 0;
 
-    // Do not crop bullets
-    chart.maskBullets = false;
+    let series1 = chart.series.push(new am4charts.RadarColumnSeries());
+    series1.columns.template.tooltipText = "{name}: {valueY.value}";
+    series1.columns.template.width = am4core.percent(100);
+    series1.name = "Series 1";
+    series1.dataFields.categoryX = "category";
+    series1.dataFields.valueY = "value1";
 
-    // Remove padding
-    chart.paddingBottom = 0;
+    let series2 = chart.series.push(new am4charts.RadarColumnSeries());
+    series2.columns.template.width = am4core.percent(100);
+    series2.columns.template.tooltipText = "{name}: {valueY.value}";
+    series2.name = "Series 2";
+    series2.dataFields.categoryX = "category";
+    series2.dataFields.valueY = "value2";
 
-    // Create series
-    let series = chart.series.push(new am4charts.ColumnSeries());
-    series.dataFields.valueY = "points";
-    series.dataFields.categoryX = "name";
-    series.columns.template.propertyFields.fill = "color";
-    series.columns.template.propertyFields.stroke = "color";
-    series.columns.template.column.cornerRadiusTopLeft = 15;
-    series.columns.template.column.cornerRadiusTopRight = 15;
-    series.columns.template.tooltipText = "{categoryX}: [bold]{valueY}[/b]";
+    chart.seriesContainer.zIndex = -1;
 
-    // Add bullets
-    let bullet = series.bullets.push(new am4charts.Bullet());
-    let image = bullet.createChild(am4core.Image);
-    image.horizontalCenter = "middle";
-    image.verticalCenter = "bottom";
-    image.dy = 20;
-    image.y = am4core.percent(100);
-    image.propertyFields.href = "bullet";
-    image.tooltipText = series.columns.template.tooltipText;
-    image.propertyFields.fill = "color";
-    image.filters.push(new am4core.DropShadowFilter());
+    chart.scrollbarX = new am4core.Scrollbar();
+    chart.scrollbarX.exportable = false;
+    chart.scrollbarY = new am4core.Scrollbar();
+    chart.scrollbarY.exportable = false;
+
+    chart.cursor = new am4charts.RadarCursor();
+    chart.cursor.xAxis = categoryAxis;
+    chart.cursor.fullWidthLineX = true;
+    chart.cursor.lineX.strokeOpacity = 0;
+    chart.cursor.lineX.fillOpacity = 0.1;
+    chart.cursor.lineX.fill = am4core.color("#000000");
   }
 
   getChart3() {
     // chatt petak warna warni
-    let chart = am4core.create("chartdivCommCorp3", am4charts.XYChart);
+    let chart = am4core.create("chartdivAcWarn3", am4charts.XYChart);
     // chart.scrollbarX = new am4core.Scrollbar();
 
     // Add data
@@ -821,7 +933,7 @@ export class McCommAndCorpComponent implements OnInit, OnDestroy {
   getChart4() {
     // chart 2 line
     // let chart = am4core.create("chartReceipt", am4charts.XYChart);
-    let chart = am4core.create("chartdivCommCorp4", am4charts.XYChart);
+    let chart = am4core.create("chartdivAcWarn4", am4charts.XYChart);
 
     // Add data
     chart.data = [
@@ -909,7 +1021,7 @@ export class McCommAndCorpComponent implements OnInit, OnDestroy {
     let series1 = chart.series.push(new am4charts.LineSeries());
     series1.dataFields.valueY = "active";
     series1.dataFields.categoryX = "month";
-    series1.name = "Active";
+    series1.name = "Downloaded ";
     series1.strokeWidth = 3;
     series1.bullets.push(new am4charts.CircleBullet());
     series1.tooltipText = "Amount {name} in {categoryX}: {valueY}";
@@ -919,7 +1031,7 @@ export class McCommAndCorpComponent implements OnInit, OnDestroy {
     let series2 = chart.series.push(new am4charts.LineSeries());
     series2.dataFields.valueY = "inactive";
     series2.dataFields.categoryX = "month";
-    series2.name = "Inactive";
+    series2.name = "Generated";
     series2.strokeWidth = 3;
     series2.bullets.push(new am4charts.CircleBullet());
     series2.tooltipText = "Amount {name} in {categoryX}: {valueY}";
@@ -936,7 +1048,7 @@ export class McCommAndCorpComponent implements OnInit, OnDestroy {
   getChart5() {
     // chart bar 2 line
     // let chart = am4core.create("chartReceipt", am4charts.XYChart);
-    let chart = am4core.create("chartdivCommCorp5", am4charts.XYChart);
+    let chart = am4core.create("chartdivAcWarn5", am4charts.XYChart);
     chart.colors.step = 2;
 
     chart.legend = new am4charts.Legend();
@@ -1071,20 +1183,20 @@ export class McCommAndCorpComponent implements OnInit, OnDestroy {
   getChart6() {
     // pie chart
     // let chart = am4core.create("chartReceipt", am4charts.XYChart);
-    let chart = am4core.create("chartdivCommCorp6", am4charts.PieChart);
+    let chart = am4core.create("chartdivAcWarn6", am4charts.PieChart);
 
     // Add data
     chart.data = [
       {
-        label: "Facebook",
+        label: "SMS",
         amount: 501.9,
       },
       {
-        label: "Twitter",
+        label: "Email",
         amount: 301.9,
       },
       {
-        label: "Instagram",
+        label: "Printed",
         amount: 201.1,
       },
     ];

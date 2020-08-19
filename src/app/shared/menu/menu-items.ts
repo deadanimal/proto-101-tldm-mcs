@@ -60,12 +60,7 @@ export const ROUTES: RouteInfo[] = [
     type: "link",
     icontype: "fas fas fa-bell text-default",
   },
-  // {
-  //   path: "/admin/observation",
-  //   title: "Anti-Air Warfare",
-  //   type: "link",
-  //   icontype: "fas fa-file-alt text-default",
-  // },
+
   {
     path: "/admin/academy",
     title: "ACADEMY",
@@ -78,119 +73,17 @@ export const ROUTES: RouteInfo[] = [
       { path: "education", title: "TRACK MANAGEMENT", type: "link" },
     ],
   },
-  // {
-  //   path: "/admin/climate",
-  //   title: "Record and Replay Function",
-  //   type: "link",
-  //   icontype: "fas fa-chart-line text-default",
-  // },
-
-  {
-    path: "/admin/communication-and-corporate",
-    title: "Simulation and Training",
-    type: "link",
-    icontype: "fas fa-money-bill-alt text-default",
-  },
-  {
-    path: "/admin/strategic-planning-and-international",
-    title: "Maintenance Functionalities.",
-    type: "link",
-    icontype: "fas fa-stamp text-default",
-  },
-  {
-    path: "/admin/publication",
-    title: "Gun Predictor",
-    type: "link",
-    icontype: "fas fa-chart-bar text-default",
-  },
-
-  // {
-  //   path: "/admin/automatic-content",
-  //   title: "Automatic Content",
-  //   type: "sub",
-  //   icontype: "fas fas fa-newspaper text-default",
-  //   collapse: "ac",
-  //   isCollapsed: true,
-  //   children: [
-  //     { path: "warnings", title: "Warnings", type: "link" },
-  //     { path: "forecasts", title: "Forecasts", type: "link" },
-  //     {
-  //       path: "earthquake-and-tsunami",
-  //       title: "Earthquake and Tsunami",
-  //       type: "link",
-  //     },
-  //     { path: "observation", title: "Observation", type: "link" },
-  //     {
-  //       path: "satellite-and-radar",
-  //       title: "Satellite and Radar",
-  //       type: "link",
-  //     },
-  //     {
-  //       path: "climate",
-  //       title: "Climate",
-  //       type: "link",
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: "/admin/manual-content",
-  //   title: "Manual Content",
-  //   type: "sub",
-  //   icontype: "fas fa-file-alt text-default",
-  //   collapse: "mc",
-  //   isCollapsed: true,
-  //   children: [
-  //     {
-  //       path: "communication-and-corporate",
-  //       title: "Communication and Corporate",
-  //       type: "link",
-  //     },
-  //     {
-  //       path: "strategic-planning-and-international",
-  //       title: "Strategic Planning and International",
-  //       type: "link",
-  //     },
-  //     {
-  //       path: "procurement-and-administration",
-  //       title: "Procurement and Administration",
-  //       type: "link",
-  //     },
-  //     {
-  //       path: "publication",
-  //       title: "Publication",
-  //       type: "link",
-  //     },
-  //     {
-  //       path: "education",
-  //       title: "Education",
-  //       type: "link",
-  //     },
-  //   ],
-  // },
-
-  {
-    path: "/admin/analytics",
-    title: "Analytics",
-    type: "link",
-    icontype: "fas fa-chart-bar text-default",
-  },
-  {
-    path: "/admin/report",
-    title: "Report",
-    type: "link",
-    icontype: "fas fa-chart-bar text-default",
-  },
 
   {
     path: "/admin/management",
-    title: "System",
+    title: "SYSTEM",
     type: "sub",
     icontype: "fas fa-cog text-default",
     collapse: "management",
     isCollapsed: true,
     children: [
       { path: "users", title: "Users", type: "link" },
-      { path: "roles", title: "Roles", type: "link" },
+      // { path: "roles", title: "Roles", type: "link" },
       { path: "audit-trails", title: "Audit Trails", type: "link" },
     ],
   },

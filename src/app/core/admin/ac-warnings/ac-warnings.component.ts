@@ -112,38 +112,47 @@ export class AcWarningsComponent implements OnInit, OnDestroy {
         attribution: "...",
       }),
     ],
-    zoom: 9,
-    center: latLng(3.4582308051504707, 101.5892640625),
+    zoom: 12,
+    center: latLng(2.733335, 101.377733),
   };
   layers = [
     // circle([ 46.95, -122 ], { radius: 5000 }),
     // polygon([[ 46.8, -121.85 ], [ 46.92, -121.92 ], [ 46.87, -121.8 ]]),
-    marker([3.4582308051504707, 101.5892640625], {
+    marker([2.722361, 101.43545], {
       icon: icon({
-        iconSize: [30, 41],
+        iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/brand/pointer.png",
+        iconUrl: "../assets/img/google/ship1.png",
       }),
     }),
-    marker([2.991679, 101.754049], {
+    // circle([ 46.95, -122 ], { radius: 5000 }),
+    // polygon([[ 46.8, -121.85 ], [ 46.92, -121.92 ], [ 46.87, -121.8 ]]),
+    marker([2.76077, 101.385978], {
       icon: icon({
-        iconSize: [30, 41],
+        iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/brand/pointer1.png",
+        iconUrl: "../assets/img/google/ship1.png",
       }),
     }),
-    marker([3.149381, 101.840624], {
+    marker([2.738822, 101.369488], {
       icon: icon({
-        iconSize: [30, 41],
+        iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/brand/pointer2.png",
+        iconUrl: "../assets/img/google/ship1.png",
       }),
     }),
-    marker([3.165835, 101.439355], {
+    marker([2.733335, 101.292532], {
       icon: icon({
-        iconSize: [30, 41],
+        iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/brand/pointer3.png",
+        iconUrl: "../assets/img/google/ship2.png",
+      }),
+    }),
+    marker([2.681208, 101.322765], {
+      icon: icon({
+        iconSize: [40, 40],
+        iconAnchor: [13, 41],
+        iconUrl: "../assets/img/google/ship2.png",
       }),
     }),
   ];

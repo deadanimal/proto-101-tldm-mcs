@@ -97,7 +97,6 @@ export class McEducationComponent implements OnInit, OnDestroy {
     },
   ];
 
-  // map code
   options = {
     layers: [
       tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -106,67 +105,46 @@ export class McEducationComponent implements OnInit, OnDestroy {
       }),
     ],
     zoom: 12,
-    center: latLng(3.065524, 101.645919),
+    center: latLng(2.733335, 101.377733),
   };
   layers = [
     // circle([ 46.95, -122 ], { radius: 5000 }),
     // polygon([[ 46.8, -121.85 ], [ 46.92, -121.92 ], [ 46.87, -121.8 ]]),
-    marker([3.038012, 101.737032], {
+    marker([2.722361, 101.43545], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/cctv-b.png",
+        iconUrl: "../assets/img/google/cctv-g.png",
       }),
     }),
     // circle([ 46.95, -122 ], { radius: 5000 }),
     // polygon([[ 46.8, -121.85 ], [ 46.92, -121.92 ], [ 46.87, -121.8 ]]),
-    marker([3.000545, 101.583062], {
+    marker([2.76077, 101.385978], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/cctv-b.png",
+        iconUrl: "../assets/img/google/cctv-g.png",
       }),
     }),
-    marker([3.038944, 101.523971], {
+    marker([2.738822, 101.369488], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/cctv-b.png",
+        iconUrl: "../assets/img/google/cctv-g.png",
       }),
     }),
-    marker([3.028412, 101.611981], {
+    marker([2.733335, 101.292532], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/cctv-b.png",
+        iconUrl: "../assets/img/google/cctv-g.png",
       }),
     }),
-    marker([3.077438, 101.640332], {
+    marker([2.681208, 101.322765], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/cctv-b.png",
-      }),
-    }),
-    marker([2.998242, 101.535026], {
-      icon: icon({
-        iconSize: [40, 40],
-        iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/cctv-b.png",
-      }),
-    }),
-    marker([3.032526, 101.643587], {
-      icon: icon({
-        iconSize: [40, 40],
-        iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/cctv-b.png",
-      }),
-    }),
-    marker([3.04624, 101.750774], {
-      icon: icon({
-        iconSize: [40, 40],
-        iconAnchor: [13, 41],
-        iconUrl: "../assets/img/google/cctv-b.png",
+        iconUrl: "../assets/img/google/cctv-g.png",
       }),
     }),
   ];
@@ -237,13 +215,13 @@ export class McEducationComponent implements OnInit, OnDestroy {
     // this.editActionForm.reset();
   }
 
-  navigatePage(path: String, id) {
+  navigatePage(path: String) {
     // let qq = "db17a36a-1da6-4919-9746-dfed8802ec9d";
-    console.log(id);
-    console.log(path + "/" + id);
+    // console.log(id);
+    // console.log(path + "/" + id);
     if (path == "/admin//utility/Actions") {
       return this.router.navigate([path]);
-    } else if (path == "/admin/asset-warranty") {
+    } else if (path == "/admin/service-tax") {
       return this.router.navigate([path]);
     }
   }

@@ -91,47 +91,47 @@ export class AcForecastsComponent implements OnInit, OnDestroy {
         attribution: "...",
       }),
     ],
-    zoom: 9,
-    center: latLng(3.056471, 102.197916),
+    zoom: 12,
+    center: latLng(2.733335, 101.377733),
   };
   layers = [
     // circle([ 46.95, -122 ], { radius: 5000 }),
     // polygon([[ 46.8, -121.85 ], [ 46.92, -121.92 ], [ 46.87, -121.8 ]]),
-    marker([3.294082, 101.561358], {
+    marker([2.722361, 101.43545], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/icons/common/rain.svg",
+        iconUrl: "../assets/img/google/ship1.png",
       }),
     }),
     // circle([ 46.95, -122 ], { radius: 5000 }),
     // polygon([[ 46.8, -121.85 ], [ 46.92, -121.92 ], [ 46.87, -121.8 ]]),
-    marker([3.000545, 101.583062], {
+    marker([2.76077, 101.385978], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/icons/common/rain.svg",
+        iconUrl: "../assets/img/google/ship1.png",
       }),
     }),
-    marker([3.038944, 101.523971], {
+    marker([2.738822, 101.369488], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/icons/common/rain.svg",
+        iconUrl: "../assets/img/google/ship1.png",
       }),
     }),
-    marker([2.989274, 102.316098], {
+    marker([2.733335, 101.292532], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/icons/common/sunny.svg",
+        iconUrl: "../assets/img/google/ship2.png",
       }),
     }),
-    marker([3.040963, 102.819345], {
+    marker([2.681208, 101.322765], {
       icon: icon({
         iconSize: [40, 40],
         iconAnchor: [13, 41],
-        iconUrl: "../assets/img/icons/common/sunny.svg",
+        iconUrl: "../assets/img/google/ship2.png",
       }),
     }),
   ];
