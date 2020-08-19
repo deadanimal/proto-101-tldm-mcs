@@ -52,19 +52,22 @@ export class AboutUsComponent implements OnInit {
     if (path == "home") {
       return this.router.navigate(["/global/landing_page"]);
     } else if (path == "manual") {
-      return this.router.navigate(["/user-portal/user-manual"]);
+      return this.router.navigate(["/global/user-manual"]);
     } else if (path == "faq") {
       return this.router.navigate(["global/faq"]);
-    } else if (path == "brochure") {
-      return this.router.navigate(["/user-portal/brochure"]);
-    } else if (path == "about-us") {
-      return this.router.navigate(["/global/about-us"]);
+    } else if (path == "survey") {
+      return this.router.navigate(["/global/survey"]);
+    } else if (path == "refund") {
+      return this.router.navigate(["/global/refund"]);
     } else if (path == "complaint") {
-      return this.router.navigate(["/user-portal/complaint"]);
+      return this.router.navigate(["/global/complaint"]);
     } else if (path == "login") {
       return this.router.navigate(["/auth/login"]);
+    } else if (path == "about-us") {
+      return this.router.navigate(["/global/about-us"]);
     }
   }
+
   onChatLoaded(api: LiveChatWidgetApiModel): void {
     this.liveChatApi = api;
     this.isLiveChatWidgetLoaded = true;

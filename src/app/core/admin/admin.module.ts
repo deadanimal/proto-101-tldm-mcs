@@ -20,34 +20,44 @@ import { NgxDropzoneModule } from "ngx-dropzone";
 import { OrgChartModule } from "angular-org-chart";
 import { LeafletModule } from "@asymmetrik/ngx-leaflet";
 // import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-// import { HttpClient, HttpClientModule } from "@angular/common/http";
-// import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
-// import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { HttpClientModule } from "@angular/common/http";
+import { environment } from "src/environments/environment";
+import * as mapbox from "mapbox-gl";
+import * as MapboxDraw from "@mapbox/mapbox-gl-draw";
+(mapbox as any).accessToken = environment.mapbox.accessToken;
+import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
+
 import { DashboardComponent } from "./dashboard/dashboard.component";
+import { AcWarningsComponent } from "./ac-warnings/ac-warnings.component";
+import { McSpAndInternationalComponent } from "./mc-sp-and-international/mc-sp-and-international.component";
+import { McPublicationComponent } from "./mc-publication/mc-publication.component";
+import { McCommAndCorpComponent } from "./mc-comm-and-corp/mc-comm-and-corp.component";
+import { AcEarthquakeNTsunamiComponent } from "./ac-earthquake-n-tsunami/ac-earthquake-n-tsunami.component";
+import { PreviousBillSummaryComponent } from "./previous-bill-summary/previous-bill-summary.component";
+import { McProcAndAdminComponent } from "./mc-proc-and-admin/mc-proc-and-admin.component";
+import { AcSatelliteAndRadarComponent } from "./ac-satellite-and-radar/ac-satellite-and-radar.component";
+import { AcClimateComponent } from "./ac-climate/ac-climate.component";
+import { AcForecastsComponent } from "./ac-forecasts/ac-forecasts.component";
+
 import { ManagementAuditComponent } from "./management-audit/management-audit.component";
 import { ManagementUserComponent } from "./management-user/management-user.component";
 import { ReportComponent } from "./report/report.component";
 import { ManagementRolesComponent } from "./management-roles/management-roles.component";
+
 import { MatStepperModule } from "@angular/material/stepper";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatButtonModule } from "@angular/material/button";
+import { ChargersUsageComponent } from "./chargers-usage/chargers-usage.component";
+import { ChargersRewardComponent } from "./chargers-reward/chargers-reward.component";
+import { McEducationComponent } from "./mc-education/mc-education.component";
+import { ChargersBillSummaryComponent } from "./chargers-bill-summary/chargers-bill-summary.component";
+import { ChargersPaymentChannelComponent } from "./chargers-payment-channel/chargers-payment-channel.component";
+import { ChargersContactUsComponent } from "./chargers-contact-us/contact-us.component";
+import { ChargersBillPresentmentComponent } from "./chargers-bill-presentment/chargers-bill-presentment.component";
+import { ChargersBillAnalyticalComponent } from "./chargers-bill-analytical/chargers-bill-analytical.component";
+import { AcObservationComponent } from "./ac-observation/ac-observation.component";
+import { ChargersServiceTaxComponent } from "./chargers-service-tax/chargers-service-tax.component";
 import { AnalyticsComponent } from "./analytics/analytics.component";
-import { SocialMediaComponent } from "./social-media/social-media.component";
-import { MediaMonitoringComponent } from "./media-monitoring/media-monitoring.component";
-import { WorkEmergencyComponent } from "./work-emergency/work-emergency.component";
-import { InvestorProfileComponent } from "./investor-profile/investor-profile.component";
-import { HeavyMaintenanceComponent } from "./heavy-maintenance/heavy-maintenance.component";
-import { SparePartManagementComponent } from "./spare-part-management/spare-part-management.component";
-import { AssetInventoryComponent } from "./asset-inventory/asset-inventory.component";
-import { RoutineMaintenanceComponent } from "./routine-maintenance/routine-maintenance.component";
-import { MaintenanceBudgetAlocationComponent } from "./maintenance-budget-alocation/maintenance-budget-alocation.component";
-import { KpiModuleComponent } from "./kpi-module/kpi-module.component";
-import { PaymentComponent } from './payment/payment.component';
-import { ForumComponent } from './forum/forum.component';
-import { RoutineMaintenanceDetailsComponent } from './routine-maintenance-details/routine-maintenance-details.component';
-import { AssetWarrantyComponent } from './asset-warranty/asset-warranty.component';
-import { HmNotificationDefectComponent } from './hm-notification-defect/hm-notification-defect.component';
-import { HmWorkOrderComponent } from './hm-work-order/hm-work-order.component';
 
 @NgModule({
   declarations: [
@@ -56,23 +66,27 @@ import { HmWorkOrderComponent } from './hm-work-order/hm-work-order.component';
     ManagementRolesComponent,
     ReportComponent,
     DashboardComponent,
+    AcWarningsComponent,
+    McSpAndInternationalComponent,
+    McPublicationComponent,
+    PreviousBillSummaryComponent,
+    McCommAndCorpComponent,
+    AcEarthquakeNTsunamiComponent,
+    AcSatelliteAndRadarComponent,
+    McProcAndAdminComponent,
+    AcClimateComponent,
+    AcForecastsComponent,
+    ChargersUsageComponent,
+    ChargersRewardComponent,
+    McEducationComponent,
+    ChargersBillSummaryComponent,
+    ChargersPaymentChannelComponent,
+    ChargersContactUsComponent,
+    ChargersBillPresentmentComponent,
+    ChargersBillAnalyticalComponent,
+    AcObservationComponent,
+    ChargersServiceTaxComponent,
     AnalyticsComponent,
-    AssetInventoryComponent,
-    SocialMediaComponent,
-    MediaMonitoringComponent,
-    WorkEmergencyComponent,
-    InvestorProfileComponent,
-    RoutineMaintenanceComponent,
-    KpiModuleComponent,
-    MaintenanceBudgetAlocationComponent,
-    HeavyMaintenanceComponent,
-    SparePartManagementComponent,
-    PaymentComponent,
-    ForumComponent,
-    RoutineMaintenanceDetailsComponent,
-    AssetWarrantyComponent,
-    HmNotificationDefectComponent,
-    HmWorkOrderComponent,
   ],
   imports: [
     CommonModule,
@@ -95,7 +109,6 @@ import { HmWorkOrderComponent } from './hm-work-order/hm-work-order.component';
     MatFormFieldModule,
     MatButtonModule,
     LeafletModule,
-    // HttpClientModule,
   ],
 })
 export class AdminModule {}

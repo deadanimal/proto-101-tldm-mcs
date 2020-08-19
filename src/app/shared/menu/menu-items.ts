@@ -35,104 +35,151 @@ export const USERPORTALROUTES: RouteInfo[] = [
 export const ROUTES: RouteInfo[] = [
   {
     path: "/admin/dashboard",
-    title: "Dashboard",
+    title: "DASHBOARD",
     type: "link",
     icontype: "fas fa-home text-default",
   },
   {
-    path: "/admin/asset-inventory",
-    title: "Track management and surveillance",
-    type: "link",
-    icontype: "fas fa-tasks text-default",
-    // collapse: "AI",
-    // isCollapsed: true,
-    // children: [
-    //   { path: "asset-inventory", title: "Asset Inventory", type: "link" },
-    //   { path: "asset-warranty", title: "Asset Warranty", type: "link" },
-    // ],
-  },
-  {
-    path: "/admin/tactical-navigation",
-    title: "Tactical Navigation",
-    type: "link",
+    path: "/admin/weapon",
+    title: "WEAPON",
+    type: "sub",
     icontype: "fas fa-archive text-default",
-    // collapse: "RM",
-    // isCollapsed: true,
-    // children: [
-    //   { path: "dashboard", title: "Progress Dashboard", type: "link" },
-    //   { path: "details", title: "Routine Maintenance", type: "link" },
-    // ],
+    collapse: "TN",
+    isCollapsed: true,
+    children: [
+      { path: "warnings", title: "ASSIGNMENT", type: "link" },
+      { path: "forecasts", title: "FIRING CORRECTION", type: "link" },
+      { path: "climate", title: "CHECK FIRING", type: "link" },
+      { path: "observation", title: "TRAINING", type: "link" },
+    ],
   },
+
   {
-    path: "/admin/heavy-maintenance",
-    title: "Equipment Status and Control",
-    type: "link",
-    icontype: "fas fa-folder-open text-default",
-    // collapse: "RM",
-    // isCollapsed: true,
-    // children: [
-    //   {
-    //     path: "notification-defect",
-    //     title: "Surface Warfare",
-    //     type: "link",
-    //   },
-    //   { path: "work-order", title: "Work Order", type: "link" },
-    //   { path: "dashboard", title: "Budget, Panalty & KPI", type: "link" },
-    // ],
-  },
-  {
-    path: "/admin/work-emergency",
-    title: "Surface Warfare",
+    path: "/admin/jarvis",
+    title: "JARVIS",
     type: "link",
     icontype: "fas fas fa-bell text-default",
   },
+  // {
+  //   path: "/admin/observation",
+  //   title: "Anti-Air Warfare",
+  //   type: "link",
+  //   icontype: "fas fa-file-alt text-default",
+  // },
   {
-    path: "/admin/spare-part-management",
-    title: "Anti-Air Warfare",
-    type: "link",
-    icontype: "fas fa-file-alt text-default",
-  },
-  {
-    path: "/admin/maintenance-budget-alocation",
-    title: "Situational Awareness",
-    type: "link",
+    path: "/admin/academy",
+    title: "ACADEMY",
+    type: "sub",
     icontype: "fas fa-newspaper text-default",
+    collapse: "AD",
+    isCollapsed: true,
+    children: [
+      { path: "communication-and-corporate", title: "ACADEMY", type: "link" },
+      { path: "education", title: "TRACK MANAGEMENT", type: "link" },
+    ],
   },
+  // {
+  //   path: "/admin/climate",
+  //   title: "Record and Replay Function",
+  //   type: "link",
+  //   icontype: "fas fa-chart-line text-default",
+  // },
 
   {
-    path: "/admin/kpi-module",
-    title: "Record and Replay Function",
-    type: "link",
-    icontype: "fas fa-chart-line text-default",
-  },
-
-  {
-    path: "/admin/payment",
+    path: "/admin/communication-and-corporate",
     title: "Simulation and Training",
     type: "link",
     icontype: "fas fa-money-bill-alt text-default",
   },
-
   {
-    path: "/admin/forum",
+    path: "/admin/strategic-planning-and-international",
     title: "Maintenance Functionalities.",
     type: "link",
     icontype: "fas fa-stamp text-default",
   },
-
   {
-    path: "/admin/analytics",
+    path: "/admin/publication",
     title: "Gun Predictor",
     type: "link",
     icontype: "fas fa-chart-bar text-default",
   },
 
   // {
-  //   path: "/admin/report",
-  //   title: "Report",
-  //   type: "link",
-  //   icontype: "fas fa-chart-pie text-default",
+  //   path: "/admin/automatic-content",
+  //   title: "Automatic Content",
+  //   type: "sub",
+  //   icontype: "fas fas fa-newspaper text-default",
+  //   collapse: "ac",
+  //   isCollapsed: true,
+  //   children: [
+  //     { path: "warnings", title: "Warnings", type: "link" },
+  //     { path: "forecasts", title: "Forecasts", type: "link" },
+  //     {
+  //       path: "earthquake-and-tsunami",
+  //       title: "Earthquake and Tsunami",
+  //       type: "link",
+  //     },
+  //     { path: "observation", title: "Observation", type: "link" },
+  //     {
+  //       path: "satellite-and-radar",
+  //       title: "Satellite and Radar",
+  //       type: "link",
+  //     },
+  //     {
+  //       path: "climate",
+  //       title: "Climate",
+  //       type: "link",
+  //     },
+  //   ],
   // },
+  // {
+  //   path: "/admin/manual-content",
+  //   title: "Manual Content",
+  //   type: "sub",
+  //   icontype: "fas fa-file-alt text-default",
+  //   collapse: "mc",
+  //   isCollapsed: true,
+  //   children: [
+  //     {
+  //       path: "communication-and-corporate",
+  //       title: "Communication and Corporate",
+  //       type: "link",
+  //     },
+  //     {
+  //       path: "strategic-planning-and-international",
+  //       title: "Strategic Planning and International",
+  //       type: "link",
+  //     },
+  //     {
+  //       path: "procurement-and-administration",
+  //       title: "Procurement and Administration",
+  //       type: "link",
+  //     },
+  //     {
+  //       path: "publication",
+  //       title: "Publication",
+  //       type: "link",
+  //     },
+  //     {
+  //       path: "education",
+  //       title: "Education",
+  //       type: "link",
+  //     },
+  //   ],
+  // },
+
+  {
+    path: "/admin/analytics",
+    title: "Analytics",
+    type: "link",
+    icontype: "fas fa-chart-bar text-default",
+  },
+  {
+    path: "/admin/report",
+    title: "Report",
+    type: "link",
+    icontype: "fas fa-chart-bar text-default",
+  },
 
   {
     path: "/admin/management",

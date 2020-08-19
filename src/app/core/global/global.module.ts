@@ -12,12 +12,14 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 import { LoadingBarModule } from "@ngx-loading-bar/core";
+// import { QuillModule } from "ngx-quill";
 
 import { RouterModule } from "@angular/router";
 import { GlobalRoutes } from "./global.routing";
 import { NotificationsComponent } from "./notifications/notifications.component";
 import { ProfileComponent } from "./profile/profile.component";
 import { SettingsComponent } from "./settings/settings.component";
+import { SurveyComponent } from "./survey/survey.component";
 import { LandingPageComponent } from "./landing-page/landing-page.component";
 import { AutocompleteLibModule } from "angular-ng-autocomplete";
 import { FaqComponent } from "./faq/faq.component";
@@ -30,6 +32,7 @@ import { LivechatWidgetModule } from "@livechat/angular-widget";
     NotificationsComponent,
     ProfileComponent,
     SettingsComponent,
+    SurveyComponent,
     LandingPageComponent,
     FaqComponent,
     AboutUsComponent,
@@ -51,6 +54,7 @@ import { LivechatWidgetModule } from "@livechat/angular-widget";
     AutocompleteLibModule,
     CarouselModule.forRoot(),
     LivechatWidgetModule,
+    // QuillModule,
   ],
 })
 export class GlobalModule {}

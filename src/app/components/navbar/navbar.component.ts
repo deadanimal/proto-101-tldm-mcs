@@ -16,7 +16,6 @@ import { NotifyService } from "src/app/shared/handler/notify/notify.service";
 import { UsersService } from "src/app/shared/services/users/users.service";
 import { User } from "src/app/shared/services/users/users.model";
 import { JwtService } from "src/app/shared/handler/jwt/jwt.service";
-import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-navbar",
@@ -42,8 +41,7 @@ export class NavbarComponent implements OnInit {
     private jwtService: JwtService,
     private notifyService: NotifyService,
     private element: ElementRef,
-    private router: Router,
-    public translate: TranslateService
+    private router: Router
   ) {
     this.user = this.userService.user;
     this.location = location;
@@ -68,12 +66,6 @@ export class NavbarComponent implements OnInit {
         console.log(event.error);
       }
     });
-
-    translate.addLangs(["en", "bm"]);
-    translate.setDefaultLang("en");
-
-    let browserLang = translate.getBrowserLang();
-    translate.use(browserLang.match(/en|bm/) ? browserLang : "en");
   }
 
   ngOnInit() {

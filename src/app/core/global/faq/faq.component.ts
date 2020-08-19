@@ -1,7 +1,10 @@
-import { Component, OnInit,ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { AutocompleteLibModule } from "angular-ng-autocomplete";
-import { LiveChatWidgetModel, LiveChatWidgetApiModel } from '@livechat/angular-widget';
+import {
+  LiveChatWidgetModel,
+  LiveChatWidgetApiModel,
+} from "@livechat/angular-widget";
 
 @Component({
   selector: "app-faq",
@@ -9,29 +12,27 @@ import { LiveChatWidgetModel, LiveChatWidgetApiModel } from '@livechat/angular-w
   styleUrls: ["./faq.component.scss"],
 })
 export class FaqComponent implements OnInit {
-
   public isLiveChatWidgetLoaded: boolean = false;
   public liveChatApi: LiveChatWidgetApiModel;
-  public visitor: { name: string; email: string};
-  public params: { name: string; value: string}[];
+  public visitor: { name: string; email: string };
+  public params: { name: string; value: string }[];
   test: Date = new Date();
   isCollapsed = true;
 
-  @ViewChild('liveChatWidget', {static: false}) public liveChatWidget: LiveChatWidgetModel;
+  @ViewChild("liveChatWidget", { static: false })
+  public liveChatWidget: LiveChatWidgetModel;
 
   constructor(private router: Router) {
-
     this.visitor = {
-      name: 'John Doe',
-      email: 'john@doe.com',
+      name: "John Doe",
+      email: "john@doe.com",
     };
 
     this.params = [
-      { name: 'Login', value: 'joe_public' },
-      { name: 'Account ID', value: 'ABCD1234' },
-      { name: 'Total order value', value: '$123' }
+      { name: "Login", value: "joe_public" },
+      { name: "Account ID", value: "ABCD1234" },
+      { name: "Total order value", value: "$123" },
     ];
-
   }
 
   ngOnInit() {}
@@ -52,20 +53,22 @@ export class FaqComponent implements OnInit {
     if (path == "home") {
       return this.router.navigate(["/global/landing_page"]);
     } else if (path == "manual") {
-      return this.router.navigate(["/user-portal/user-manual"]);
+      return this.router.navigate(["/global/user-manual"]);
     } else if (path == "faq") {
       return this.router.navigate(["global/faq"]);
-    } else if (path == "brochure") {
-      return this.router.navigate(["/user-portal/brochure"]);
-    } else if (path == "about-us") {
-      return this.router.navigate(["/global/about-us"]);
+    } else if (path == "survey") {
+      return this.router.navigate(["/global/survey"]);
+    } else if (path == "refund") {
+      return this.router.navigate(["/global/refund"]);
     } else if (path == "complaint") {
-      return this.router.navigate(["/user-portal/complaint"]);
+      return this.router.navigate(["/global/complaint"]);
     } else if (path == "login") {
       return this.router.navigate(["/auth/login"]);
+    } else if (path == "about-us") {
+      return this.router.navigate(["/global/about-us"]);
     }
   }
-  
+
   onChatLoaded(api: LiveChatWidgetApiModel): void {
     this.liveChatApi = api;
     this.isLiveChatWidgetLoaded = true;
@@ -78,11 +81,11 @@ export class FaqComponent implements OnInit {
   }
 
   onChatWindowMinimized() {
-    console.log('minimized')
+    console.log("minimized");
   }
 
   onChatWindowOpened() {
-    console.log('opened')
+    console.log("opened");
   }
 
   openChatWindow(): void {
@@ -90,10 +93,10 @@ export class FaqComponent implements OnInit {
       this.liveChatWidget.openChatWindow();
 
       // You can also use methods directly on liveChatApi instance
-      // for more details plese read our documentation 
+      // for more details plese read our documentation
       // https://developers.livechatinc.com/docs/extending-ui/extending-chat-widget/javascript-api/#methods
       // this.liveChatApi.open_chat_window();
-    };
+    }
   }
 
   hideChatWindow() {
@@ -101,9 +104,9 @@ export class FaqComponent implements OnInit {
       this.liveChatWidget.minimizeChatWindow();
 
       // You can also use methods directly on liveChatApi instance
-      // for more details plese read our documentation 
+      // for more details plese read our documentation
       // https://developers.livechatinc.com/docs/extending-ui/extending-chat-widget/javascript-api/#methods
       // this.liveChatApi.minimize_chat_window();
-    };
+    }
   }
 }

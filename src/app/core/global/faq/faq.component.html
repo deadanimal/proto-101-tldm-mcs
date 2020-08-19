@@ -1,6 +1,7 @@
 <nav
   id="navbar-main"
-  class="navbar navbar-horizontal navbar-main navbar-expand-lg navbar-dark bg-secondary"
+  class="navbar navbar-horizontal navbar-main navbar-expand-lg navbar-dark"
+  style="background-color: #c0e7e5;"
 >
   <div class="container">
     <a
@@ -91,16 +92,16 @@
             <span class="nav-link-inner--text">Mengenai Kami</span>
           </a>
         </li>
-        <!-- <li class="nav-item" style="cursor: pointer;">
+        <li class="nav-item" style="cursor: pointer;">
           <a
             class="nav-link text-dark"
             routerLinkActive="active"
             style="cursor: pointer;"
-            (click)="navigatePage('brochure')"
+            (click)="navigatePage('survey')"
           >
-            <span class="nav-link-inner--text">Brochure</span>
+            <span class="nav-link-inner--text">Maklum Balas</span>
           </a>
-        </li> -->
+        </li>
         <!-- <li class="nav-item" style="cursor: pointer;">
           <a
             class="nav-link text-dark"
@@ -127,11 +128,11 @@
         <li class="nav-item">
           <a
             class="nav-link nav-link-icon"
-            href="https://www.facebook.com/creativetim"
+            href="#"
             target="_blank"
             tooltip="Like us on Facebook"
           >
-            <i class="fab fa-facebook-square text-cyan"></i>
+            <i class="fab fa-facebook-square text-blue"></i>
             <span class="nav-link-inner--text d-lg-none text-dark"
               >Facebook</span
             >
@@ -140,11 +141,11 @@
         <li class="nav-item">
           <a
             class="nav-link nav-link-icon"
-            href="https://www.instagram.com/creativetimofficial"
+            href="#"
             target="_blank"
             tooltip="Follow us on Instagram"
           >
-            <i class="fab fa-instagram text-pink"></i>
+            <i class="fab fa-instagram text-danger"></i>
             <span class="nav-link-inner--text d-lg-none text-dark"
               >Instagram</span
             >
@@ -153,11 +154,11 @@
         <li class="nav-item">
           <a
             class="nav-link nav-link-icon"
-            href="https://twitter.com/creativetim"
+            href="#"
             target="_blank"
             tooltip="Follow us on Twitter"
           >
-            <i class="fab fa-twitter-square text-blue"></i>
+            <i class="fab fa-twitter-square text-default"></i>
             <span class="nav-link-inner--text d-lg-none text-dark"
               >Twitter</span
             >
@@ -218,10 +219,10 @@
     </div>
   </div>
 </nav>
-<div class="main-content">
+<div class="main-content" style="background-color: #219ca0;">
   <!-- Header -->
 
-  <section class="section section-lg pt-lg-0 mt-3 pb-4">
+  <section class="section section-lg pt-3 pb-4">
     <div class="container">
       <div class="row justify-content-center">
         <div class="text-center text-white pt-4 pb-5">
@@ -233,54 +234,59 @@
               <accordion [isAnimated]="true">
                 <accordion-group class="pb--1">
                   <h5 class="mb-0" accordion-heading>
-                    1. Apakah itu Portal Selangor?
+                    1. Apakah akronim atau singkatan nama bagi Jabatan
+                    Meteorologi Malaysia?
                   </h5>
-                  Portal Selangor adalah singkatan untuk Portal Rasmi Kerajaan
-                  Negeri Selangor. Portal Selangor merupakan gerbang utama
-                  kepada informasi dan perkhidmatan Kerajaan Negeri Selangor
-                  melalui Internet.
+                  Nama singkatan atau akronim rasmi bagi Jabatan Meteorologi
+                  Malaysia ialah MetMalaysia.
                 </accordion-group>
                 <accordion-group>
                   <h5 class="mb-0" accordion-heading>
-                    2. Mengapa Portal Selangor diwujudkan?
+                    2. Bagaimanakah cara untuk menghubungi Ibu Pejabat
+                    MetMalaysia dan Pejabat Meteorologi Negeri?
                   </h5>
                   <p>
-                    Pada masa kini, kebanyakan maklumat dan perkhidmatan
-                    Kerajaan Negeri Selangor telah disediakan secara online dan
-                    Portal Selangor diwujudkan untuk memberi kemudahan kepada
-                    orang ramai mencari maklumat dan perkhidmatan yang
-                    disediakan.
+                    Alamat, nombor telefon dan nombor faksimili bagi Ibu Pejabat
+                    MetMalaysia dan Pejabat-Pejabat Meteorologi Negeri seluruh
+                    Malaysia boleh didapati di pautan “Hubungi Kami” pada laman
+                    web ini.
                   </p>
                 </accordion-group>
                 <accordion-group>
                   <h5 class="mb-0" accordion-heading>
-                    3. Siapakah yang dibenarkan melayari dan menggunakan Portal
-                    Selangor?
+                    3. Bagaimanakah cara untuk mendapatkan ramalan cuaca terkini
+                    yang dikeluarkan selain dari laman web rasmi MetMalaysia?
                   </h5>
                   <p>
-                    Umumnya, Portal Selangor boleh dicapai oleh semua lapisan
-                    masyarakat.
+                    Selain daripada media cetak dan elektronik, pengguna mudah
+                    alih iOS dan Android boleh memuat turun aplikasi mudah alih
+                    myCuaca bagi mendapatkan maklumat ramalan cuaca terkini.
+                    Pada masa yang sama, siaran laporan cuaca akan ke udara
+                    sebanyak tiga (3) kali sehari melalui saluran RTM1 semasa
+                    rancangan Selamat Pagi Malaysia pada jam 9.00 pagi, Berita
+                    Nasional 5 pada jam 5.00 petang dan Berita Nasional 8 pada
+                    jam 8.00 malam.
                   </p>
                 </accordion-group>
                 <accordion-group>
                   <h5 class="mb-0" accordion-heading>
-                    4. Apakah dasar privasi Portal? Adakah penggunaan atau akses
-                    saya diawasi dan direkodkan?
+                    4. Bagaimanakah cara untuk mendapatkan maklumat meteorologi
+                    bagi tujuan penerbitan awam/ maklumat bidang kewartawanan?
                   </h5>
                   <p>
-                    Segala akses dan penggunaan anda ke atas Portal Selangor
-                    tidak akan direkodkan. Untuk maklumat lanjut, sila layari
-                    "Dasar Privasi dan Dasar Keselamatan".
+                    Sila berhubung dengan pegawai di Unit Komunikasi Korporat
+                    melalui emel ukk@met.gov.my bagi tujuan tersebut.
                   </p>
                 </accordion-group>
                 <accordion-group>
                   <h5 class="mb-0" accordion-heading>
-                    5. Bagaimanakah cara untuk saya mengakses Portal Selangor
-                    melalui telefon pintar/PDA?
+                    5. Apakah prosedur permohonan untuk mendapatkan data dan
+                    maklumat meteorologi serta berapakah caj yang akan dikenakan
+                    ke atasnya?
                   </h5>
-                  Portal Selangor boleh diakses melalui telefon pintar/PDA
-                  dengan mengakses www.selangor.gov.my. Paparan versi Mobile
-                  yang responsif akan disesuaikan.
+                  Permohonan data dan maklumat meteorologi boleh dikemukakan
+                  melalui emel klim@met.gov.my dan rujuk dokumen Jadual Akta Fi
+                  untuk mengetahui caj data.
                 </accordion-group>
               </accordion>
             </div>
@@ -299,15 +305,19 @@
         <br /><br />
         <span
           ><i class="fas fa-envelope text-yellow"></i
-          >&nbsp;&nbsp;webadmin@selangor.gov.my</span
+          >&nbsp;&nbsp;mmd@met.gov.my</span
         ><br />
         <span
-          ><i class="fas fa-phone text-brown"></i>&nbsp;&nbsp;Tel 1:
-          (6)03-55447000</span
+          ><i class="fas fa-phone text-brown"></i>&nbsp;&nbsp;Tel: (603)
+          79678000 </span
         ><br />
         <span
-          ><i class="fas fa-phone text-brown"></i>&nbsp;&nbsp;Tel 2:
-          (6)03-55212347</span
+          ><i class="fas fa-phone text-brown"></i>&nbsp;&nbsp;Faks: (603)
+          79550964</span
+        ><br />
+        <span
+          ><i class="fas fa-phone text-brown"></i>&nbsp;&nbsp;Hotline:
+          1-300-22-1638</span
         >
       </div>
       <div class="col-md-4 text-dark">
@@ -321,9 +331,9 @@
         <br /><br />
         <span>
           <i class="fas fa-map-marker-alt text-danger"></i>&nbsp;&nbsp;Pejabat
-          Setiausaha Kerajaan Negeri Selangor,<br />
-          Bangunan Sultan Salahuddin Abdul Aziz Shah,<br />
-          40503 Shah Alam,<br />
+          Jabatan Meteorologi Malaysia<br />
+          Jalan Sultan,<br />
+          46667 Petaling Jaya,<br />
           Selangor Darul Ehsan.
         </span>
       </div>
@@ -363,7 +373,7 @@
               href="http://blog.creative-tim.com?ref=adpa-presentation-page"
               class="nav-link"
               target="_blank"
-              >Disclaimer</a
+              >Disclaimer</a 
             >
           </li> -->
           <!-- <li class="nav-item">

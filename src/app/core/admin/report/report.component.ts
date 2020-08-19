@@ -1,167 +1,102 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  NgZone,
-  TemplateRef,
-} from "@angular/core";
-import { User } from "src/assets/mock/admin-user/users.model";
-import { MocksService } from "src/app/shared/services/mocks/mocks.service";
+import { Component, OnInit, OnDestroy, NgZone, TemplateRef } from '@angular/core';
+import { User } from 'src/assets/mock/admin-user/users.model'
+import { MocksService } from 'src/app/shared/services/mocks/mocks.service';
 
-import * as moment from "moment";
+import * as moment from 'moment';
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-import { BsModalRef, BsModalService } from "ngx-bootstrap";
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 am4core.useTheme(am4themes_animated);
 import swal from "sweetalert2";
 
-export enum SelectionType {
-  single = "single",
-  multi = "multi",
-  multiClick = "multiClick",
-  cell = "cell",
-  checkbox = "checkbox",
-}
-
 @Component({
-  selector: "app-report",
-  templateUrl: "./report.component.html",
-  styleUrls: ["./report.component.scss"],
+  selector: 'app-report',
+  templateUrl: './report.component.html',
+  styleUrls: ['./report.component.scss']
 })
 export class ReportComponent implements OnInit, OnDestroy {
+
   // Chart
-  chart: any;
-  chart1: any;
-  chart2: any;
-  chart3: any;
-  dataChart: any[] = [];
-  dataChart2: any[] = [];
-  dataChart3: any[] = [];
+  chart: any
+  chart1: any
+  chart2: any
+  chart3: any
+  dataChart: any[] = []
+  dataChart2: any[] = []
+  dataChart3: any[] = []
 
   // Datepicker
-  bsDPConfig = {
-    isAnimated: true,
-    containerClass: "theme-default",
-  };
-
-  // Table
-  tableEntries: number = 5;
-  tableSelected: any[] = [];
-  tableTemp = [];
-  tableActiveRow: any;
-  SelectionType = SelectionType;
-  listreport: any = [
-    {
-      chu: "100,000",
-      td: "INV20200820122312312",
-      tvu: "1.08",
-      ac: "200,000",
-      nav: "170,000",
-      oa: "100,000",
-      cap_app: "110,000",
-      roi: "190.000",
-      inv_du: "7 years",
-      ann_growth: "9.00 %",
-      tot_ret: "200,000",
-      r_ytd: "200,000",
-      created_at: "2019-07-27T01:07:14Z",
-    },
-    {
-      chu: "100,000",
-      td: "INV20200820122312312",
-      tvu: "1.08",
-      ac: "200,000",
-      nav: "170,000",
-      oa: "100,000",
-      cap_app: "110,000",
-      roi: "190.000",
-      inv_du: "7 years",
-      ann_growth: "9.00 %",
-      tot_ret: "200,000",
-      r_ytd: "200,000",
-      created_at: "2019-07-27T01:07:14Z",
-    },
-    {
-      chu: "100,000",
-      td: "INV20200820122312312",
-      tvu: "1.08",
-      ac: "200,000",
-      nav: "170,000",
-      oa: "100,000",
-      cap_app: "110,000",
-      roi: "190.000",
-      inv_du: "7 years",
-      ann_growth: "9.00 %",
-      tot_ret: "200,000",
-      r_ytd: "200,000",
-      created_at: "2019-07-27T01:07:14Z",
-    },
-  ];
-
-  constructor(private mockService: MocksService, private zone: NgZone) {
-    this.getData();
+  bsDPConfig = { 
+    isAnimated: true, 
+    containerClass: 'theme-default'
   }
 
-  ngOnInit() {}
+  constructor(
+    private mockService: MocksService,
+    private zone: NgZone
+  ) {
+    this.getData()
+  }
+
+  ngOnInit() {
+  }
 
   ngOnDestroy() {
     this.zone.runOutsideAngular(() => {
       if (this.chart) {
-        this.chart.dispose();
+        this.chart.dispose()
       }
       if (this.chart1) {
-        this.chart1.dispose();
+        this.chart1.dispose()
       }
       if (this.chart2) {
-        this.chart2.dispose();
+        this.chart2.dispose()
       }
       if (this.chart3) {
-        this.chart3.dispose();
+        this.chart3.dispose()
       }
-    });
+    })
   }
 
   getData() {
-    this.mockService.getAll("admin-report/report-data-1.json").subscribe(
+    this.mockService.getAll('admin-report/report-data-1.json').subscribe(
       (res) => {
         // Success
-        this.dataChart = res;
+        this.dataChart = res
       },
       () => {
         // Unsuccess
       },
       () => {
         // After
-        this.mockService.getAll("admin-report/report-data-2.json").subscribe(
+        this.mockService.getAll('admin-report/report-data-2.json').subscribe(
           (res) => {
             // Success
-            this.dataChart2 = res;
+            this.dataChart2 = res
           },
           () => {
             // Unsuccess
           },
           () => {
             // After
-            this.mockService
-              .getAll("admin-report/report-data-3.json")
-              .subscribe(
-                (res) => {
-                  // Success
-                  this.dataChart3 = res;
-                },
-                () => {
-                  // Unsuccess
-                },
-                () => {
-                  // After
-                  this.getCharts();
-                }
-              );
+            this.mockService.getAll('admin-report/report-data-3.json').subscribe(
+              (res) => {
+                // Success
+                this.dataChart3 = res
+              },
+              () => {
+                // Unsuccess
+              },
+              () => {
+                // After
+                this.getCharts()
+              }
+            )
           }
-        );
+        )
       }
-    );
+    )
   }
 
   successAlert(task) {
@@ -175,28 +110,20 @@ export class ReportComponent implements OnInit, OnDestroy {
     });
   }
 
-  entriesChange($event) {
-    this.tableEntries = $event.target.value;
-  }
-
-  onActivate(event) {
-    this.tableActiveRow = event.row;
-  }
-
   getCharts() {
     this.zone.runOutsideAngular(() => {
-      this.getChart();
-      this.getChart1();
-      this.getChart2();
-      this.getChart3();
-    });
+      this.getChart()
+      this.getChart1()
+      this.getChart2()
+      this.getChart3()
+    })
   }
 
   getChart() {
     let chart = am4core.create("chartdiv", am4charts.XYChart);
     chart.paddingRight = 20;
 
-    let data = this.dataChart;
+    let data = this.dataChart
 
     chart.data = data;
     chart.dateFormatter.inputDateFormat = "yyyy";
@@ -223,7 +150,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     chart.scrollbarX = new am4core.Scrollbar();
 
-    this.chart = chart;
+    this.chart = chart
   }
 
   getChart1() {
@@ -236,12 +163,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     for (var i = 1; i < 120; i++) {
       open += Math.round((Math.random() < 0.5 ? 1 : -1) * Math.random() * 4);
-      close = Math.round(
-        open +
-          Math.random() * 5 +
-          i / 5 -
-          (Math.random() < 0.5 ? 1 : -1) * Math.random() * 2
-      );
+      close = Math.round(open + Math.random() * 5 + i / 5 - (Math.random() < 0.5 ? 1 : -1) * Math.random() * 2);
       data.push({ date: new Date(2018, 0, i), open: open, close: close });
     }
 
@@ -274,23 +196,23 @@ export class ReportComponent implements OnInit, OnDestroy {
     chart.cursor.xAxis = dateAxis;
     chart.scrollbarX = new am4core.Scrollbar();
 
-    this.chart1 = chart;
+    this.chart1 = chart
   }
 
   getChart2() {
     let chart = am4core.create("chartdiv2", am4charts.XYChart);
 
     // Add data
-    chart.data = this.dataChart2;
+    chart.data = this.dataChart2
 
     // Create axes
     let valueAxisX = chart.xAxes.push(new am4charts.ValueAxis());
-    valueAxisX.title.text = "X Axis";
+    valueAxisX.title.text = 'X Axis';
     valueAxisX.renderer.minGridDistance = 40;
 
     // Create value axis
     let valueAxisY = chart.yAxes.push(new am4charts.ValueAxis());
-    valueAxisY.title.text = "Y Axis";
+    valueAxisY.title.text = 'Y Axis';
 
     // Create series
     let lineSeries = chart.series.push(new am4charts.LineSeries());
@@ -334,37 +256,37 @@ export class ReportComponent implements OnInit, OnDestroy {
     let trend = chart.series.push(new am4charts.LineSeries());
     trend.dataFields.valueY = "value2";
     trend.dataFields.valueX = "value";
-    trend.strokeWidth = 2;
+    trend.strokeWidth = 2
     trend.stroke = chart.colors.getIndex(0);
     trend.strokeOpacity = 0.7;
     trend.data = [
-      { value: 1, value2: 2 },
-      { value: 12, value2: 11 },
+      { "value": 1, "value2": 2 },
+      { "value": 12, "value2": 11 }
     ];
 
     let trend2 = chart.series.push(new am4charts.LineSeries());
     trend2.dataFields.valueY = "value2";
     trend2.dataFields.valueX = "value";
-    trend2.strokeWidth = 2;
+    trend2.strokeWidth = 2
     trend2.stroke = chart.colors.getIndex(3);
     trend2.strokeOpacity = 0.7;
     trend2.data = [
-      { value: 1, value2: 1 },
-      { value: 12, value2: 19 },
+      { "value": 1, "value2": 1 },
+      { "value": 12, "value2": 19 }
     ];
 
     //scrollbars
     chart.scrollbarX = new am4core.Scrollbar();
     chart.scrollbarY = new am4core.Scrollbar();
 
-    this.chart2 = chart;
+    this.chart2 = chart
   }
 
   getChart3() {
     let chart = am4core.create("chartdiv3", am4charts.XYChart);
 
     // Add data
-    chart.data = this.dataChart3;
+    chart.data = this.dataChart3
 
     // Set input format for the dates
     chart.dateFormatter.inputDateFormat = "yyyy-MM-dd";
@@ -377,7 +299,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     let series = chart.series.push(new am4charts.LineSeries());
     series.dataFields.valueY = "value";
     series.dataFields.dateX = "date";
-    series.tooltipText = "{value}";
+    series.tooltipText = "{value}"
     series.strokeWidth = 2;
     series.minBulletDistance = 15;
 
@@ -419,6 +341,8 @@ export class ReportComponent implements OnInit, OnDestroy {
     dateAxis.start = 0.79;
     dateAxis.keepSelection = true;
 
-    this.chart3 = chart;
+    this.chart3 = chart
+
   }
+
 }

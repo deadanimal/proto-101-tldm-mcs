@@ -1,25 +1,32 @@
 import { Routes } from "@angular/router";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 
+import { AcWarningsComponent } from "./ac-warnings/ac-warnings.component";
+import { McSpAndInternationalComponent } from "./mc-sp-and-international/mc-sp-and-international.component";
+import { McPublicationComponent } from "./mc-publication/mc-publication.component";
+import { McCommAndCorpComponent } from "./mc-comm-and-corp/mc-comm-and-corp.component";
+import { AcEarthquakeNTsunamiComponent } from "./ac-earthquake-n-tsunami/ac-earthquake-n-tsunami.component";
+import { McProcAndAdminComponent } from "./mc-proc-and-admin/mc-proc-and-admin.component";
+import { PreviousBillSummaryComponent } from "./previous-bill-summary/previous-bill-summary.component";
+import { AcSatelliteAndRadarComponent } from "./ac-satellite-and-radar/ac-satellite-and-radar.component";
+import { AcClimateComponent } from "./ac-climate/ac-climate.component";
+import { AcForecastsComponent } from "./ac-forecasts/ac-forecasts.component";
+
 import { ManagementAuditComponent } from "./management-audit/management-audit.component";
 import { ManagementUserComponent } from "./management-user/management-user.component";
 import { ReportComponent } from "./report/report.component";
 import { ManagementRolesComponent } from "./management-roles/management-roles.component";
+import { ChargersUsageComponent } from "./chargers-usage/chargers-usage.component";
+import { ChargersRewardComponent } from "./chargers-reward/chargers-reward.component";
+import { McEducationComponent } from "./mc-education/mc-education.component";
+import { ChargersBillSummaryComponent } from "./chargers-bill-summary/chargers-bill-summary.component";
+import { ChargersPaymentChannelComponent } from "./chargers-payment-channel/chargers-payment-channel.component";
+import { ChargersContactUsComponent } from "./chargers-contact-us/contact-us.component";
+import { ChargersBillPresentmentComponent } from "./chargers-bill-presentment/chargers-bill-presentment.component";
+import { ChargersBillAnalyticalComponent } from "./chargers-bill-analytical/chargers-bill-analytical.component";
+import { AcObservationComponent } from "./ac-observation/ac-observation.component";
+import { ChargersServiceTaxComponent } from "./chargers-service-tax/chargers-service-tax.component";
 import { AnalyticsComponent } from "./analytics/analytics.component";
-import { InvestorProfileComponent } from "./investor-profile/investor-profile.component";
-import { RoutineMaintenanceComponent } from "./routine-maintenance/routine-maintenance.component";
-import { HeavyMaintenanceComponent } from "./heavy-maintenance/heavy-maintenance.component";
-import { SparePartManagementComponent } from "./spare-part-management/spare-part-management.component";
-import { AssetInventoryComponent } from "./asset-inventory/asset-inventory.component";
-import { WorkEmergencyComponent } from "./work-emergency/work-emergency.component";
-import { MaintenanceBudgetAlocationComponent } from "./maintenance-budget-alocation/maintenance-budget-alocation.component";
-import { KpiModuleComponent } from "./kpi-module/kpi-module.component";
-import { PaymentComponent } from "./payment/payment.component";
-import { ForumComponent } from "./forum/forum.component";
-import { RoutineMaintenanceDetailsComponent } from "./routine-maintenance-details/routine-maintenance-details.component";
-import { AssetWarrantyComponent } from "./asset-warranty/asset-warranty.component";
-import { HmNotificationDefectComponent } from "./hm-notification-defect/hm-notification-defect.component";
-import { HmWorkOrderComponent } from "./hm-work-order/hm-work-order.component";
 
 export const AdminRoutes: Routes = [
   {
@@ -30,63 +37,115 @@ export const AdminRoutes: Routes = [
         component: DashboardComponent,
       },
       {
-        path: "spare-part-management",
-        component: SparePartManagementComponent,
+        path: "weapon",
+        children: [
+          {
+            path: "warnings",
+            component: AcWarningsComponent,
+          },
+          {
+            path: "forecasts",
+            component: AcForecastsComponent,
+          },
+          {
+            path: "climate",
+            component: AcClimateComponent,
+          },
+          {
+            path: "observation",
+            component: AcObservationComponent,
+          },
+        ],
       },
       {
-        path: "payment",
-        component: PaymentComponent,
+        path: "jarvis",
+        component: AcSatelliteAndRadarComponent,
       },
       {
-        path: "forum",
-        component: ForumComponent,
+        path: "academy",
+        children: [
+          {
+            path: "education",
+            component: McEducationComponent,
+          },
+          {
+            path: "communication-and-corporate",
+            component: McCommAndCorpComponent,
+          },
+        ],
       },
-      {
-        path: "work-emergency",
-        component: WorkEmergencyComponent,
-      },
-      {
-        path: "heavy-maintenance",
-        component: HeavyMaintenanceComponent,
-        // children: [
-        //   { path: "dashboard", component: HeavyMaintenanceComponent },
-        //   {
-        //     path: "notification-defect",
-        //     component: HmNotificationDefectComponent,
-        //   },
-        //   { path: "work-order", component: HmWorkOrderComponent },
-        // ],
-      },
-      {
-        path: "maintenance-budget-alocation",
-        component: MaintenanceBudgetAlocationComponent,
-      },
-      {
-        path: "kpi-module",
-        component: KpiModuleComponent,
-      },
-      // {
-      // path: "routine-maintenance",
-      // children: [
-      { path: "tactical-navigation", component: RoutineMaintenanceComponent },
-      //     { path: "dashboard", component: RoutineMaintenanceDetailsComponent },
-      //   ],
-      // },
-      // {
-      //   path: "asset-inventory",
-      //   children: [
-      { path: "asset-inventory", component: AssetInventoryComponent },
-      { path: "asset-warranty", component: AssetWarrantyComponent },
-      //   ],
-      // },
-      // {
-      //   path: "investor-profile",
-      //   component: InvestorProfileComponent,
-      // },
       {
         path: "analytics",
         component: AnalyticsComponent,
       },
+      {
+        path: "earthquake-and-tsunami",
+        component: AcEarthquakeNTsunamiComponent,
+      },
+      //   ],
+      // },
+      {
+        path: "previous-bill-summary",
+        component: PreviousBillSummaryComponent,
+      },
+      // {
+      //   path: "manual-content",
+      //   children: [
+      {
+        path: "strategic-planning-and-international",
+        component: McSpAndInternationalComponent,
+      },
+      {
+        path: "procurement-and-administration",
+        component: McProcAndAdminComponent,
+      },
+      {
+        path: "publication",
+        component: McPublicationComponent,
+      },
+      {
+        path: "education",
+        component: McEducationComponent,
+      },
+      //   ],
+      // },
+      // {
+      //   path: "charges",
+      //   children: [
+      {
+        path: "service-tax",
+        component: ChargersServiceTaxComponent,
+      },
+      {
+        path: "reward",
+        component: ChargersRewardComponent,
+      },
+      {
+        path: "announcement",
+        component: McEducationComponent,
+      },
+      {
+        path: "bill-summary",
+        component: ChargersBillSummaryComponent,
+      },
+      {
+        path: "payment-channel",
+        component: ChargersPaymentChannelComponent,
+      },
+      {
+        path: "contact-us",
+        component: ChargersContactUsComponent,
+      },
+      {
+        path: "bill-presentment",
+        component: ChargersBillPresentmentComponent,
+      },
+      {
+        path: "bill-analytical",
+        component: ChargersBillAnalyticalComponent,
+      },
+      //   ],
+      // },
       {
         path: "report",
         component: ReportComponent,

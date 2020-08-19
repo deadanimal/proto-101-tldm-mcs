@@ -96,7 +96,7 @@ export class LoginComponent implements OnInit {
     } else if (path == "dashboard-admin") {
       return this.router.navigate(["/admin/dashboard"]);
     } else if (path == "dashboard-user") {
-      return this.router.navigate(["/user/dashboard"]);
+      return this.router.navigate(["/global/landing_page"]);
     } else if (path == "dashboard-bus") {
       return this.router.navigate(["/bus/dashboard"]);
     }
