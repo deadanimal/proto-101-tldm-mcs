@@ -134,7 +134,7 @@
             </div>
           </div>
         </div>
-        <video width="100%" height="400px" controls>
+        <video width="100%" height="300px" controls>
           <source src="assets/img/google/airforce.mp4" type="video/mp4" />
         </video>
       </div>
@@ -154,7 +154,7 @@
             </div>
           </div>
         </div>
-        <video width="100%" height="400px" controls>
+        <video width="100%" height="300px" controls>
           <source src="assets/img/google/airforce2.mp4" type="video/mp4" />
         </video>
       </div>
@@ -175,7 +175,7 @@
           </div>
         </div>
         <img
-          style="width: 100%; height: 400px;"
+          style="width: 100%; height: 300px;"
           src="assets/img/google/airforce3.jpg"
         />
       </div>
@@ -183,10 +183,28 @@
   </div>
 
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-8">
       <div class="card">
         <div class="card-header bg-secondary">Map</div>
-        <div id="map"></div>
+        <div style="width: 100%; height: 400px;" id="map"></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header bg-secondary">
+          <div class="row">
+            <div class="col">Wind Speed</div>
+            <div class="col text-right">
+              <button
+                class="btn btn-default btn-sm"
+                (click)="successAlert('print report')"
+              >
+                Print
+              </button>
+            </div>
+          </div>
+        </div>
+        <div style="width: 100%; height: 400px;" id="chartdivsetelite3"></div>
       </div>
     </div>
   </div>

@@ -115,7 +115,7 @@ export class AcSatelliteAndRadarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.getCharts();
+    this.getCharts();
   }
 
   ngAfterViewInit(): void {
@@ -308,9 +308,39 @@ export class AcSatelliteAndRadarComponent implements OnInit, OnDestroy {
 
   getCharts() {
     this.zone.runOutsideAngular(() => {
-      this.getChart();
-      this.getChart1();
+      this.getChart3();
+      // this.getChart1();
     });
+  }
+
+  getChart3() {
+    let chart = am4core.create("chartdivsetelite3", am4charts.GaugeChart);
+    chart.innerRadius = -15;
+
+    let axis = chart.xAxes.push(new am4charts.ValueAxis() as any);
+    axis.min = 0;
+    axis.max = 100;
+    axis.strictMinMax = true;
+
+    let colorSet = new am4core.ColorSet();
+
+    let gradient = new am4core.LinearGradient();
+    gradient.stops.push({ color: am4core.color("red") });
+    gradient.stops.push({ color: am4core.color("yellow") });
+    gradient.stops.push({ color: am4core.color("green") });
+
+    axis.renderer.line.stroke = gradient;
+    axis.renderer.line.strokeWidth = 15;
+    axis.renderer.line.strokeOpacity = 1;
+
+    axis.renderer.grid.template.disabled = true;
+
+    let hand = chart.hands.push(new am4charts.ClockHand());
+    hand.radius = am4core.percent(97);
+
+    setInterval(function () {
+      hand.showValue(Math.random() * 100, 1000, am4core.ease.cubicOut);
+    }, 2000);
   }
 
   getChart() {

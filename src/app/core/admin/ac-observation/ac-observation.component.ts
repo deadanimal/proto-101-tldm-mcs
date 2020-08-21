@@ -335,40 +335,36 @@ export class AcObservationComponent implements OnInit, OnDestroy {
     /* Add data */
     chart.data = [
       {
-        country: "Lithuania",
+        country: "North",
         litres: 501,
       },
       {
-        country: "Czechia",
+        country: "NE",
         litres: 301,
       },
       {
-        country: "Ireland",
+        country: "East",
         litres: 266,
       },
       {
-        country: "Germany",
+        country: "SE",
         litres: 165,
       },
       {
-        country: "Australia",
+        country: "South",
         litres: 139,
       },
       {
-        country: "Austria",
+        country: "SW",
         litres: 336,
       },
       {
-        country: "UK",
+        country: "West",
         litres: 290,
       },
       {
-        country: "Belgium",
+        country: "NW",
         litres: 325,
-      },
-      {
-        country: "The Netherlands",
-        litres: 40,
       },
     ];
 
