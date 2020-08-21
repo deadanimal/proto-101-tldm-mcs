@@ -115,7 +115,7 @@ export class AcSatelliteAndRadarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.getCharts();
+    // this.getCharts();
   }
 
   ngAfterViewInit(): void {

@@ -82,9 +82,9 @@ export const ROUTES: RouteInfo[] = [
     collapse: "management",
     isCollapsed: true,
     children: [
-      { path: "users", title: "Users", type: "link" },
+      { path: "users", title: "USERS", type: "link" },
       // { path: "roles", title: "Roles", type: "link" },
-      { path: "audit-trails", title: "Audit Trails", type: "link" },
+      { path: "audit-trails", title: "AUDIT TRAILS", type: "link" },
     ],
   },
 ];
